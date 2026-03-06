@@ -1,5 +1,7 @@
 package com.asciugano.engine.shaders;
 
+import com.asciugano.engine.entities.Camera;
+import com.asciugano.engine.utils.Maths;
 import org.joml.Matrix4f;
 
 public class StaticShader extends ShaderProgram {
@@ -28,11 +30,16 @@ public class StaticShader extends ShaderProgram {
     protected void getAllUniformLocations() {
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix= super.getUniformLocation("projectionMatrix");
+        location_viewMatrix = super.getUniformLocation("viewMatrix");
         location_textureSampler = super.getUniformLocation("textureSampler");
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
         super.loadMatrix(location_transformationMatrix, matrix);
+    }
+
+    public void loadViewMatrix(Camera camera) {
+        super.loadMatrix(location_viewMatrix, Maths.createViewMatrix(camera));
     }
 
     public void loadProjectionMatrix(Matrix4f matrix) {

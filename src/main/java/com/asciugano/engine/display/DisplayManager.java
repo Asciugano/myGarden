@@ -2,6 +2,7 @@ package com.asciugano.engine.display;
 
 import java.nio.IntBuffer;
 
+import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
@@ -22,13 +23,14 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class DisplayManager {
-    private long window;
+    private static long window;
 
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
 
     public static int getWidth() { return WIDTH; }
     public static int getHeight() { return HEIGHT; }
+    public static long getWindow() { return window; }
 
     public void run() {
         init();
@@ -110,38 +112,105 @@ public class DisplayManager {
         Renderer renderer = new Renderer(shader);
 
         float[] vertices = {
-                -0.5f, 0.5f, 0,
-                -0.5f, -0.5f, 0,
-                0.5f, -0.5f, 0,
-                0.5f, 0.5f, 0,
-        };
-        int[] indices = {
-                0, 1, 3,
-                3, 1, 2
+                -0.5f,0.5f,-0.5f,
+                -0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,0.5f,-0.5f,
+
+                -0.5f,0.5f,0.5f,
+                -0.5f,-0.5f,0.5f,
+                0.5f,-0.5f,0.5f,
+                0.5f,0.5f,0.5f,
+
+                0.5f,0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,0.5f,
+                0.5f,0.5f,0.5f,
+
+                -0.5f,0.5f,-0.5f,
+                -0.5f,-0.5f,-0.5f,
+                -0.5f,-0.5f,0.5f,
+                -0.5f,0.5f,0.5f,
+
+                -0.5f,0.5f,0.5f,
+                -0.5f,0.5f,-0.5f,
+                0.5f,0.5f,-0.5f,
+                0.5f,0.5f,0.5f,
+
+                -0.5f,-0.5f,0.5f,
+                -0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,-0.5f,
+                0.5f,-0.5f,0.5f
+
         };
 
         float[] textureCoords = {
-                0, 0,
-                0, 1,
-                1, 1,
-                1, 0
+
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0,
+                0,0,
+                0,1,
+                1,1,
+                1,0
+
+
+
+        };
+
+        int[] indices = {
+                0,1,3,
+                3,1,2,
+                4,5,7,
+                7,5,6,
+                8,9,11,
+                11,9,10,
+                12,13,15,
+                15,13,14,
+                16,17,19,
+                19,17,18,
+                20,21,23,
+                23,21,22
+
+
         };
 
         RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
         ModelTexture texture = new ModelTexture(loader.loadTexture("img.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
 
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+
+        Camera camera = new Camera();
 
         while ( !glfwWindowShouldClose(window) ) {
-            entity.increasePosition(new Vector3f(0, 0, -0.02f));
-//            entity.increaseRotation(new Vector3f(0, 1, 0));
+//            entity.increasePosition(new Vector3f(0, 0, -0.02f));
+            entity.increaseRotation(new Vector3f(1, 1, 0));
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.start();
+            shader.loadViewMatrix(camera);
 
             renderer.render(entity, shader);
+            camera.move();
 
             shader.stop();
 
