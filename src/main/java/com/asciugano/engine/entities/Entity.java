@@ -22,5 +22,27 @@ public class Entity {
         this.scale = scale;
     }
 
+    public void increasePosition(Vector3f position) {
+        this.position.add(position);
+    }
+
+    public void increaseRotation(Vector3f rotation) {
+        this.rotation.add(rotation);
+    }
+
     public TexturedModel getModel() { return model; }
+
+    public void setModel(TexturedModel model) { this.model = model; }
+
+    public Vector3f getPosition() { return position; }
+
+    public void setPosition(Vector3f position) { this.position = position; }
+
+    public Vector3f getRotation() { return rotation; }
+
+    public void setRotation(Vector3f rotation) { this.rotation = rotation; }
+
+    public float getScale() { return scale; }
+
+    public void setScale(float scale) { this.scale = scale; }
 }

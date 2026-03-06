@@ -2,9 +2,6 @@ package com.asciugano.engine.shaders;
 
 import org.joml.Matrix4f;
 
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-
 public class StaticShader extends ShaderProgram {
 
     private static final String PATH = "src/main/resources/shaders/";
@@ -15,6 +12,7 @@ public class StaticShader extends ShaderProgram {
     private int location_transformationMatrix;
     private int location_projectionMatrix;
     private int location_viewMatrix;
+    private int location_textureSampler;
 
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -28,18 +26,16 @@ public class StaticShader extends ShaderProgram {
 
     @Override
     protected void getAllUniformLocations() {
-        location_transformationMatrix = glGetUniformLocation(getProgramID(), "transformationMatrix");
+        location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+        location_textureSampler = super.getUniformLocation("textureSampler");
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
-        float[] buffer = new float[16];
-        matrix.get(buffer);
+        super.loadMatrix(location_transformationMatrix, matrix);
+    }
 
-        glUniformMatrix4fv(
-                location_transformationMatrix,
-                false,
-                buffer
-        );
+    public void connectTextureUnits() {
+        super.loadFloat(location_textureSampler, 0);
     }
 
     public int getProgramID() {

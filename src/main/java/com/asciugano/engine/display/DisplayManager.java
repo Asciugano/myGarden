@@ -2,12 +2,15 @@ package com.asciugano.engine.display;
 
 import java.nio.IntBuffer;
 
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Renderer;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.textures.ModelTexture;
+import org.joml.Vector3f;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -35,6 +38,17 @@ public class DisplayManager {
         glfwSetErrorCallback(null).free();
     }
 
+
+    private long getExternalMonitor() {
+        PointerBuffer monitors = glfwGetMonitors();
+
+        if(monitors == null || monitors.capacity() < 2) {
+            System.out.println("No external monitors found");
+            return glfwGetPrimaryMonitor();
+        }
+
+        return monitors.get(1);
+    }
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -45,6 +59,7 @@ public class DisplayManager {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -63,7 +78,8 @@ public class DisplayManager {
 
             glfwGetWindowSize(window, pWidth, pHeight);
 
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+//            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            GLFWVidMode vidmode = glfwGetVideoMode(getExternalMonitor());
 
             glfwSetWindowPos(
                     window,
@@ -74,7 +90,10 @@ public class DisplayManager {
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+        glViewport(0, 0, WIDTH, HEIGHT);
+
         System.out.println(glGetString(GL_VERSION));
+
         glfwSwapInterval(1);
 
         glfwShowWindow(window);
@@ -94,7 +113,6 @@ public class DisplayManager {
                 0.5f, -0.5f, 0,
                 0.5f, 0.5f, 0,
         };
-
         int[] indices = {
                 0, 1, 3,
                 3, 1, 2
@@ -111,12 +129,17 @@ public class DisplayManager {
         ModelTexture texture = new ModelTexture(loader.loadTexture("img.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
 
+        Entity entity = new Entity(texturedModel, new Vector3f(-1, 0, 0), new Vector3f(0, 0, 0), 1);
+
         while ( !glfwWindowShouldClose(window) ) {
+            entity.increasePosition(new Vector3f(0.002f, 0, 0));
+            entity.increaseRotation(new Vector3f(0, 1, 0));
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.start();
 
-            renderer.render(texturedModel);
+            renderer.render(entity, shader);
 
             shader.stop();
 

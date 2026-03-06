@@ -1,8 +1,13 @@
 package com.asciugano.engine.shaders;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -11,6 +16,8 @@ public abstract class ShaderProgram {
     private int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
+
+    private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderProgram(String vertexFile, String fragmentFile) {
         vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
@@ -32,36 +39,59 @@ public abstract class ShaderProgram {
 
     protected abstract void getAllUniformLocations();
 
-protected void bindAttribute(int attribute, String variableName) {
-    glBindAttribLocation(programID, attribute, variableName);
-}
+    protected int getUniformLocation(String uniformName) {
+        return glGetUniformLocation(programID, uniformName);
+    }
 
-public void start() {
-    glUseProgram(programID);
-}
+    protected void loadFloat(int location, float value) {
+        glUniform1f(location, value);
+    }
 
-public void stop() {
-    glUseProgram(0);
-}
+    protected void loadVector(int location, Vector3f value) {
+        glUniform3f(location, value.x, value.y, value.z);
+    }
 
-public void cleanUp() {
-    stop();
+    protected void loadBoolean(int location, boolean value) {
+        glUniform1f(location, value ? 1f : 0f);
+    }
 
-    glDetachShader(programID, vertexShaderID);
-    glDetachShader(programID, fragmentShaderID);
+    protected void loadMatrix(int location, Matrix4f matrix) {
+        matrixBuffer.clear();
+        matrix.get(matrixBuffer);
 
-    glDeleteShader(vertexShaderID);
-    glDeleteShader(fragmentShaderID);
+        glUniformMatrix4fv(location, false, matrixBuffer);
+    }
 
-    glDeleteShader(programID);
-}
+    protected void bindAttribute(int attribute, String variableName) {
+        glBindAttribLocation(programID, attribute, variableName);
+    }
+
+    public void start() {
+        glUseProgram(programID);
+    }
+
+    public void stop() {
+        glUseProgram(0);
+    }
+
+    public void cleanUp() {
+        stop();
+
+        glDetachShader(programID, vertexShaderID);
+        glDetachShader(programID, fragmentShaderID);
+
+        glDeleteShader(vertexShaderID);
+        glDeleteShader(fragmentShaderID);
+
+        glDeleteProgram(programID);
+    }
 
     private static int loadShader(String file, int type) {
         StringBuilder shaderSource = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 shaderSource.append(line).append("\n");
             }
 
@@ -75,7 +105,7 @@ public void cleanUp() {
         glShaderSource(shaderID, shaderSource);
         glCompileShader(shaderID);
 
-        if(glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
+        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
             System.out.println("Could not compile the shader: " + glGetShaderInfoLog(shaderID));
             throw new RuntimeException("Shader compilation failed: " + glGetShaderInfoLog(shaderID));
         }
@@ -83,5 +113,7 @@ public void cleanUp() {
         return shaderID;
     }
 
-    protected int getProgramID() { return programID; }
+    protected int getProgramID() {
+        return programID;
+    }
 }
