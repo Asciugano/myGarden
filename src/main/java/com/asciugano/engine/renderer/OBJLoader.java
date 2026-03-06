@@ -108,6 +108,7 @@ public class OBJLoader {
             return loader.loadToVAO(
                     verticesArray,
                     texturesArray,
+                    normalsArray,
                     indicesArray
             );
 

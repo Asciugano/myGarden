@@ -4,6 +4,7 @@ import java.nio.IntBuffer;
 
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.models.RawModel;
@@ -113,13 +114,14 @@ public class DisplayManager {
         Renderer renderer = new Renderer(shader);
 
 
-        RawModel model = OBJLoader.loadOBJModel("stall", loader);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture.png"));
+        RawModel model = OBJLoader.loadOBJModel("dragon", loader);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("white.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
 
-        Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -50), new Vector3f(0, 0, 0), 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -25), new Vector3f(0, 0, 0), 1);
 
         Camera camera = new Camera();
+        Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 
         while ( !glfwWindowShouldClose(window) ) {
 //            entity.increasePosition(new Vector3f(0, 0, -0.02f));
@@ -128,6 +130,7 @@ public class DisplayManager {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.start();
+            shader.loadLight(light);
             shader.loadViewMatrix(camera);
 
             renderer.render(entity, shader);
