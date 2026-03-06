@@ -16,16 +16,16 @@ public class Camera {
     public void move() {
         glfwSetKeyCallback(DisplayManager.getWindow(), (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_W) {
-                position.z += 0.02f;
+                position.z += 1f;
             }
             if (key == GLFW_KEY_S) {
-                position.z -= 0.02f;
+                position.z -= 1f;
             }
             if (key == GLFW_KEY_A) {
-                position.x += 0.02f;
+                position.x += 1f;
             }
             if (key == GLFW_KEY_D) {
-                position.x -= 0.02f;
+                position.x -= 1f;
             }
         });
     }

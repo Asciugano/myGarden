@@ -7,6 +7,7 @@ import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.models.RawModel;
+import com.asciugano.engine.renderer.OBJLoader;
 import com.asciugano.engine.renderer.Renderer;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.textures.ModelTexture;
@@ -111,98 +112,18 @@ public class DisplayManager {
         StaticShader shader = new StaticShader();
         Renderer renderer = new Renderer(shader);
 
-        float[] vertices = {
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
 
-                -0.5f,0.5f,0.5f,
-                -0.5f,-0.5f,0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                0.5f,0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,-0.5f,
-                -0.5f,-0.5f,-0.5f,
-                -0.5f,-0.5f,0.5f,
-                -0.5f,0.5f,0.5f,
-
-                -0.5f,0.5f,0.5f,
-                -0.5f,0.5f,-0.5f,
-                0.5f,0.5f,-0.5f,
-                0.5f,0.5f,0.5f,
-
-                -0.5f,-0.5f,0.5f,
-                -0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,-0.5f,
-                0.5f,-0.5f,0.5f
-
-        };
-
-        float[] textureCoords = {
-
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-                0,0,
-                0,1,
-                1,1,
-                1,0
-
-
-
-        };
-
-        int[] indices = {
-                0,1,3,
-                3,1,2,
-                4,5,7,
-                7,5,6,
-                8,9,11,
-                11,9,10,
-                12,13,15,
-                15,13,14,
-                16,17,19,
-                19,17,18,
-                20,21,23,
-                23,21,22
-
-
-        };
-
-        RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("img.png"));
+        RawModel model = OBJLoader.loadOBJModel("stall", loader);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
 
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -50), new Vector3f(0, 0, 0), 1);
 
         Camera camera = new Camera();
 
         while ( !glfwWindowShouldClose(window) ) {
 //            entity.increasePosition(new Vector3f(0, 0, -0.02f));
-            entity.increaseRotation(new Vector3f(1, 1, 0));
+            entity.increaseRotation(new Vector3f(0, 1, 0));
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
