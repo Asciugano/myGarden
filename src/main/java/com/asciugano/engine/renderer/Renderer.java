@@ -47,6 +47,11 @@ public class Renderer {
         );
         shader.loadTransformationMatrix(transformationMatrix);
 
+        shader.loadShineVariables(
+                texturedModel.getTexture().getShineDamper(),
+                texturedModel.getTexture().getReflectivity()
+        );
+
         shader.connectTextureUnits();
 
         glActiveTexture(GL_TEXTURE0);

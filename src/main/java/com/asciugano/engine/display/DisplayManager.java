@@ -117,6 +117,8 @@ public class DisplayManager {
         RawModel model = OBJLoader.loadOBJModel("dragon", loader);
         ModelTexture texture = new ModelTexture(loader.loadTexture("white.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
+        texture.setShineDamper(10);
+        texture.setReflectivity(1);
 
         Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -25), new Vector3f(0, 0, 0), 1);
 
