@@ -8,6 +8,7 @@ import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.models.RawModel;
+import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.renderer.OBJLoader;
 import com.asciugano.engine.renderer.Renderer;
 import com.asciugano.engine.shaders.StaticShader;
@@ -110,8 +111,7 @@ public class DisplayManager {
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
         Loader loader = new Loader();
-        StaticShader shader = new StaticShader();
-        Renderer renderer = new Renderer(shader);
+        MasterRenderer masterRenderer = new MasterRenderer();
 
 
         RawModel model = OBJLoader.loadOBJModel("dragon", loader);
@@ -120,31 +120,28 @@ public class DisplayManager {
         texture.setShineDamper(10);
         texture.setReflectivity(1);
 
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -25), new Vector3f(0, 0, 0), 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, -2, -25), new Vector3f(0, 0, 0), 1);
 
         Camera camera = new Camera();
         Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 
         while ( !glfwWindowShouldClose(window) ) {
 //            entity.increasePosition(new Vector3f(0, 0, -0.02f));
-            entity.increaseRotation(new Vector3f(0, 1, 0));
+//            entity.increaseRotation(new Vector3f(0, 1, 0));
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            shader.start();
-            shader.loadLight(light);
-            shader.loadViewMatrix(camera);
 
-            renderer.render(entity, shader);
+            masterRenderer.processEntities(entity);
+
+            masterRenderer.render(light, camera);
             camera.move();
-
-            shader.stop();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
 
-        shader.cleanUp();
+        masterRenderer.cleanUp();
         loader.cleanUp();
     }
 }
