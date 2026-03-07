@@ -23,7 +23,7 @@ public class Maths {
     public static Matrix4f createViewMatrix(Camera camera) {
         Matrix4f viewMatrix = new Matrix4f();
         Vector3f cameraPosition = camera.getPosition();
-        Vector3f negativeCameraPosition = new Vector3f(-cameraPosition.x, -cameraPosition.y, cameraPosition.z);
+        Vector3f negativeCameraPosition = new Vector3f(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
         viewMatrix
                 .identity()
                 .rotateX((float) Math.toRadians(camera.getPitch()))

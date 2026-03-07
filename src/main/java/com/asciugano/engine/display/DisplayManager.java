@@ -1,13 +1,15 @@
 package com.asciugano.engine.display;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
-import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.renderer.OBJLoader;
 import com.asciugano.engine.terrains.Terrain;
@@ -107,24 +109,32 @@ public class DisplayManager {
 
     private void loop() {
         glEnable(GL_DEPTH_TEST);
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
         Loader loader = new Loader();
         MasterRenderer masterRenderer = new MasterRenderer();
 
 
-        RawModel model = OBJLoader.loadOBJModel("dragon", loader);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("white.png"));
-        TexturedModel texturedModel = new TexturedModel(model, texture);
-        texture.setShineDamper(10);
-        texture.setReflectivity(1);
-
-        Entity entity = new Entity(texturedModel, new Vector3f(0, -2, -25), new Vector3f(0, 0, 0), 1);
-
         Camera camera = new Camera();
         Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
+
+        TexturedModel tree = new TexturedModel(OBJLoader.loadOBJModel("tree", loader), new ModelTexture(loader.loadTexture("tree.png")));
+        TexturedModel grass = new TexturedModel(OBJLoader.loadOBJModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture.png")));
+        grass.getTexture().setHasTransparency(true);
+        grass.getTexture().setUseFakeLighting(true);
+        TexturedModel fern = new TexturedModel(OBJLoader.loadOBJModel("fern", loader), new ModelTexture(loader.loadTexture("fern.png")));
+        fern.getTexture().setHasTransparency(true);
+        TexturedModel stall = new TexturedModel(OBJLoader.loadOBJModel("stall", loader), new ModelTexture(loader.loadTexture("stallTexture.png")));
         Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass.png")));
         Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("grass.png")));
+
+        List<Entity> entities = new ArrayList<>();
+        Random random = new Random();
+        for(int i = 0; i < 500; i++) {
+            entities.add(new Entity(tree, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * - 600), new Vector3f(0, 0, 0), 3));
+            entities.add(new Entity(grass, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * - 600), new Vector3f(0, 0, 0), 1));
+            entities.add(new Entity(fern, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * - 600), new Vector3f(0, 0, 0), 0.6f));
+        }
 
         while ( !glfwWindowShouldClose(window) ) {
 //            entity.increasePosition(new Vector3f(0, 0, -0.02f));
@@ -135,7 +145,9 @@ public class DisplayManager {
 
             masterRenderer.processTerrains(terrain);
             masterRenderer.processTerrains(terrain2);
-            masterRenderer.processEntities(entity);
+            for(Entity entity : entities) {
+                masterRenderer.processEntity(entity);
+            }
 
             masterRenderer.render(light, camera);
             camera.move();

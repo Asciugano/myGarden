@@ -18,8 +18,6 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class EntityRenderer {
-
-
     private StaticShader shader;
 
     public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
@@ -61,6 +59,11 @@ public class EntityRenderer {
                 texturedModel.getTexture().getReflectivity()
         );
 
+        if(texturedModel.getTexture().isHasTransparency())
+            MasterRenderer.disableCulling();
+
+        shader.loadFakeLighting(texturedModel.getTexture().isUseFakeLighting());
+
         shader.connectTextureUnits();
 
         glActiveTexture(GL_TEXTURE0);
@@ -68,6 +71,8 @@ public class EntityRenderer {
     }
 
     private void unbindTexturedModel() {
+        MasterRenderer.enableCulling();
+
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
@@ -81,6 +86,7 @@ public class EntityRenderer {
                 entity.getRotation(),
                 entity.getScale()
         );
+
         shader.loadTransformationMatrix(transformationMatrix);
     }
 

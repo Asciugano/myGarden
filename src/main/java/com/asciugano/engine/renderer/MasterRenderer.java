@@ -42,30 +42,41 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
     }
 
-    public void render(Light sun, Camera camera) {
-        prepare();
-
-        shader.start();
-        shader.loadLight(sun);
-        shader.loadViewMatrix(camera);
+    private void renderTerrain(Light sun, Camera camera) {
         terrainShader.start();
         terrainShader.loadLight(sun);
         terrainShader.loadViewMatrix(camera);
 
-        entityRenderer.render(entities);
         terrainRenderer.render(terrains);
 
         terrainShader.stop();
+    }
+    private void renderEntity(Light sun, Camera camera) {
+        shader.start();
+        shader.loadLight(sun);
+        shader.loadViewMatrix(camera);
+
+        entityRenderer.render(entities);
+
         shader.stop();
         entities.clear();
+    }
+
+    public void render(Light sun, Camera camera) {
+        prepare();
+
+        renderTerrain(sun, camera);
+        renderEntity(sun, camera);
+
         terrains.clear();
+        entities.clear();
     }
 
     public void processTerrains(Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public void processEntities(Entity entity) {
+    public void processEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
         if(batch != null) {
@@ -78,8 +89,7 @@ public class MasterRenderer {
     }
 
     public void prepare() {
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_BACK);
+        enableCulling();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -87,6 +97,15 @@ public class MasterRenderer {
     public void cleanUp() {
         shader.cleanUp();
         terrainShader.cleanUp();
+    }
+
+    public static void enableCulling() {
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_BACK);
+    }
+
+    public static void disableCulling() {
+        glDisable(GL_CULL_FACE);
     }
 
     private void createProjectionMatrix() {

@@ -13,22 +13,33 @@ public class Camera {
     private float roll;
 
     public void move() {
-        glfwSetKeyCallback(DisplayManager.getWindow(), (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_W) {
-                position.z += 1f;
-            }
-            if (key == GLFW_KEY_S) {
-                position.z -= 1f;
-            }
-            if (key == GLFW_KEY_A) {
-                position.x += 1f;
-            }
-            if (key == GLFW_KEY_D) {
-                position.x -= 1f;
-            }
-        });
-    }
 
+        long window = DisplayManager.getWindow();
+
+        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                position.y -= 0.1f;
+            } else {
+                position.z += 0.1f;
+            }
+        }
+
+        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+            if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                position.y += 0.1f;
+            } else {
+                position.z -= 0.1f;
+            }
+        }
+
+        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+            position.x += 0.1f;
+        }
+
+        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+            position.x -= 0.1f;
+        }
+    }
     public Vector3f getPosition() { return position; }
 
     public float getPitch() { return pitch; }
