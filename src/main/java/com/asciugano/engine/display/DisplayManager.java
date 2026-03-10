@@ -1,21 +1,17 @@
 package com.asciugano.engine.display;
 
-import com.asciugano.engine.components.PointerComponent;
 import com.asciugano.engine.entities.Camera;
 //import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.handlers.mouse.MousePicker;
-import com.asciugano.game.entity.Entity;
 import com.asciugano.engine.entities.Light;
-import com.asciugano.engine.entities.Player;
 import com.asciugano.engine.handlers.KeyHandler;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
-import com.asciugano.engine.models.ModelData;
-import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.renderer.MasterRenderer;
-import com.asciugano.engine.renderer.OBJLoader;
 import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.engine.textures.ModelTexture;
+import com.asciugano.game.entity.tiles.Tile;
+import com.asciugano.game.scene.Scene;
 import org.joml.Vector3f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -139,6 +135,13 @@ public class DisplayManager {
             } else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
                 MouseHandler.RIGHT_PRESSED = false;
             }
+            if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+                MouseHandler.WHEEL_PRESSED = true;
+                MouseHandler.dx = dx;
+                MouseHandler.dy = dy;
+            } else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE) {
+                MouseHandler.WHEEL_PRESSED = false;
+            }
         });
         glfwSetScrollCallback(window, (windowH, x, y) -> {
             MouseHandler.scroll = (float) y;
@@ -176,16 +179,7 @@ public class DisplayManager {
         glClearColor(1, 1, 1, 1);
 
         Loader loader = new Loader();
-        MasterRenderer masterRenderer = new MasterRenderer(loader);
-        Camera camera = new Camera();
-        List<Entity> entities = new ArrayList<>();
-
-        List<Terrain> terrains = new ArrayList<>();
-        terrains.add(new Terrain(0, 0, loader));
-        List<Light> lights = new ArrayList<>();
-        lights.add(new Light(new Vector3f(100, 100, -100), new Vector3f(1, 1, 1)));
-
-        MousePicker mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+        Scene scene = new Scene(loader);
 
         while(!glfwWindowShouldClose(window)) {
             MouseHandler.reset();
@@ -194,26 +188,13 @@ public class DisplayManager {
             float currentFrameTime = getCurrentTime();
             delta = (currentFrameTime - lastFrameTime) / 1000;
 
-            for(Entity entity : entities) {
-                masterRenderer.processEntity(entity);
-            }
-            for(Terrain terrain : terrains) {
-                masterRenderer.processTerrains(terrain);
-            }
-
-            masterRenderer.render(lights, camera);
-            if(MouseHandler.LEFT_PRESSED || MouseHandler.RIGHT_PRESSED || MouseHandler.scroll != 0) {
-                camera.move();
-            } else {
-                mousePicker.update();
-
-                camera.getComponent(PointerComponent.class).setTarget(mousePicker.getCurrentEntity());
-            }
+            scene.update(delta);
+            scene.render();
 
             glfwSwapBuffers(window);
         }
 
-        masterRenderer.cleanUp();
+        scene.cleanUp();
     }
 
     private float getCurrentTime() {

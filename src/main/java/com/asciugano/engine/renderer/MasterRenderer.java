@@ -3,12 +3,11 @@ package com.asciugano.engine.renderer;
 import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
-import com.asciugano.game.entity.Entity;
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
-import com.asciugano.engine.terrains.Terrain;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -36,30 +35,17 @@ public class MasterRenderer {
     private StaticShader shader = new StaticShader();
     private EntityRenderer entityRenderer;
 
-    private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-    private List<Terrain> terrains = new ArrayList<>();
 //    private SkyBoxRenderer skyBoxRenderer;
 
     public MasterRenderer(Loader loader) {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(shader, projectionMatrix);
-        terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
 //        skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
     }
 
-    private void renderTerrain(List<Light> lights, Camera camera) {
-        terrainShader.start();
-        terrainShader.loadSkyColor(RED, GREEN, BLUE);
-        terrainShader.loadLights(lights);
-        terrainShader.loadViewMatrix(camera);
-
-        terrainRenderer.render(terrains);
-
-        terrainShader.stop();
-    }
     private void renderEntity(List<Light> lights, Camera camera) {
         shader.start();
         shader.loadSkyColor(RED,GREEN,BLUE);
@@ -75,17 +61,11 @@ public class MasterRenderer {
     public void render(List<Light> lights, Camera camera) {
         prepare();
 
-        renderTerrain(lights, camera);
         renderEntity(lights, camera);
 
 //        skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
-        terrains.clear();
         entities.clear();
-    }
-
-    public void processTerrains(Terrain terrain) {
-        terrains.add(terrain);
     }
 
     public void processEntity(Entity entity) {

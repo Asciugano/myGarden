@@ -1,6 +1,6 @@
 package com.asciugano.engine.components;
 
-import com.asciugano.game.entity.Entity;
+import com.asciugano.engine.entities.Entity;
 
 public class ClickableComponent implements Component {
     private Entity entity;

@@ -8,6 +8,7 @@ public class MouseHandler {
 
     public static boolean RIGHT_PRESSED = false;
     public static boolean LEFT_PRESSED = false;
+    public static boolean WHEEL_PRESSED = false;
 
     public static void reset() {
         scroll = 0;
@@ -16,5 +17,6 @@ public class MouseHandler {
 
         RIGHT_PRESSED = false;
         LEFT_PRESSED = false;
+        WHEEL_PRESSED = false;
     }
 }

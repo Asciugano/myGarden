@@ -4,7 +4,7 @@ package com.asciugano.engine.renderer;
 import com.asciugano.engine.components.OffsetComponent;
 import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.components.TransformationComponent;
-import com.asciugano.game.entity.Entity;
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;

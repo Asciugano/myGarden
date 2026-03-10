@@ -2,9 +2,11 @@ package com.asciugano.engine.handlers.mouse;
 
 import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Maths;
-import com.asciugano.game.entity.Entity;
+import com.asciugano.game.entity.tiles.Tile;
+import com.asciugano.game.entity.tiles.TileType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -38,7 +40,7 @@ public class MousePicker {
     }
 
     public Entity getCurrentEntity() {
-        return com.asciugano.game.terrain.Terrain.getTileFromWorld(currentTerrainPoint.x, currentTerrainPoint.z);
+        return Terrain.getTileFromWorld(currentTerrainPoint.x, currentTerrainPoint.z);
     }
 
     public void update() {

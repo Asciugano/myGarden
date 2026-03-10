@@ -1,6 +1,6 @@
 package com.asciugano.game.entity.player;
 
-import com.asciugano.game.entity.Entity;
+import com.asciugano.engine.entities.Entity;
 import com.asciugano.game.entity.player.components.InventoryComponent;
 
 public class Player extends Entity {
