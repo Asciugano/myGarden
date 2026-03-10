@@ -4,6 +4,7 @@ import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Maths;
+import com.asciugano.game.entity.Entity;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -36,6 +37,10 @@ public class MousePicker {
         return currentTerrainPoint;
     }
 
+    public Entity getCurrentEntity() {
+        return com.asciugano.game.terrain.Terrain.getTileFromWorld(currentTerrainPoint.x, currentTerrainPoint.z);
+    }
+
     public void update() {
         viewMatrix = Maths.createViewMatrix(camera);
         currentRay = calculateMouseRay();
@@ -43,7 +48,7 @@ public class MousePicker {
         if (intersectionInRange(0f, RAY_RANGE, currentRay)) {
             currentTerrainPoint = binarySearch(0, 0f, RAY_RANGE, currentRay);
         } else {
-            currentTerrainPoint = null;
+            currentTerrainPoint = new Vector3f(0, 0, 0);
         }
     }
 

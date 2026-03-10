@@ -1,10 +1,11 @@
 package com.asciugano.engine.entities;
 
+import com.asciugano.engine.components.PointerComponent;
+import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
-import com.asciugano.game.entity.Entity;
 import org.joml.Vector3f;
 
-public class Camera extends Entity {
+public class Camera extends com.asciugano.game.entity.Entity {
 
     private Vector3f position;
     private float pitch = 20;
@@ -13,15 +14,10 @@ public class Camera extends Entity {
     private float distanceFromTarget = 50;
     private float angleAroundTarget;
 
-    private Vector3f targetPoint;
 
     public Camera() {
         this.position = new Vector3f(-300, 5, -300);
-        this.targetPoint = new Vector3f(0,0,0); // default
-    }
-
-    public void setTargetPoint(Vector3f targetPoint) {
-        this.targetPoint = targetPoint;
+        addComponent(new PointerComponent(this));
     }
 
     public void move() {
@@ -32,7 +28,18 @@ public class Camera extends Entity {
         float horizontalDistance = calculateHorizontalDistanceFromTarget();
         float verticalDistance = calculateVerticalDistanceFromTarget();
         calculateCameraPosition(horizontalDistance, verticalDistance);
+
+        Vector3f rotation = getTarget().getComponent(TransformationComponent.class).getRotation();
+        yaw = 180 - (rotation.y + angleAroundTarget);
     }
+
+    public Vector3f getPosition() { return position; }
+
+    public float getPitch() { return pitch; }
+
+    public float getYaw() { return yaw; }
+
+    public float getRoll() { return roll; }
 
     private void calculateZoom() {
         distanceFromTarget += MouseHandler.scroll;
@@ -57,24 +64,21 @@ public class Camera extends Entity {
     }
 
     private void calculateCameraPosition(float horizDistance, float vertDistance) {
-        float angle = angleAroundTarget;
-        float xOffset = (float)(horizDistance * Math.sin(Math.toRadians(angle)));
-        float zOffset = (float)(horizDistance * Math.cos(Math.toRadians(angle)));
+        com.asciugano.game.entity.Entity target = getComponent(PointerComponent.class).getTarget();
+        if(target.getComponent(TransformationComponent.class) != null) {
+            Vector3f rotation = target.getComponent(TransformationComponent.class).getRotation();
+            float angle = rotation.y + angleAroundTarget;
+            float xOffset = (float) (horizDistance * Math.sin(Math.toRadians(angle)));
+            float zOffset = (float) (horizDistance * Math.cos(Math.toRadians(angle)));
 
-        position.x = targetPoint.x - xOffset;
-        position.z = targetPoint.z - zOffset;
-        position.y = targetPoint.y + vertDistance;
+            Vector3f targetPosition = target.getComponent(TransformationComponent.class).getPosition();
+            position.x = targetPosition.x - xOffset;
+            position.z = targetPosition.z - zOffset;
 
-        yaw = 180 - angle;
+            position.y = targetPosition.y + vertDistance;
+        }
     }
 
-    public Vector3f getPosition() { return position; }
-    public float getPitch() { return pitch; }
-    public float getYaw() { return yaw; }
-    public float getRoll() { return roll; }
-
-
-    public void update(float delta) {
-
-    }
+    public com.asciugano.game.entity.Entity getTarget() { return getComponent(PointerComponent.class).getTarget(); }
+//    public void setTarget(Entity target) { this.target = target; }
 }

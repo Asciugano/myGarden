@@ -1,18 +1,19 @@
 package com.asciugano.engine.components;
 
 import com.asciugano.engine.entities.Camera;
-import com.asciugano.engine.handlers.mouse.MousePicker;
+import com.asciugano.game.entity.Entity;
 import com.asciugano.game.entity.Ray;
-import org.joml.Vector3f;
 
-public class PointerComponent {
-    private Vector3f target = new Vector3f();
+public class PointerComponent implements Component {
+    private Entity target;
     private Ray ray;
 
-    public PointerComponent(Vector3f origin, Camera camera) {
-        ray = new Ray(origin, camera);
+    public PointerComponent(Camera camera) {
+//        ray = new Ray(camera);
     }
 
     public Ray getRay() { return ray; }
-    public Vector3f getTarget() { return target; }
+    public Entity getTarget() { return target; }
+
+    public void setTarget(Entity target) { this.target = target; }
 }

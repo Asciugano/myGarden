@@ -1,7 +1,9 @@
 package com.asciugano.engine.display;
 
+import com.asciugano.engine.components.PointerComponent;
 import com.asciugano.engine.entities.Camera;
 //import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.handlers.mouse.MousePicker;
 import com.asciugano.game.entity.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.entities.Player;
@@ -176,29 +178,14 @@ public class DisplayManager {
         Loader loader = new Loader();
         MasterRenderer masterRenderer = new MasterRenderer(loader);
         Camera camera = new Camera();
-        ModelData modelData = OBJLoader.loadOBJModel("dragon");
-        Player player = new Player(
-                new TexturedModel(
-                        loader.loadToVAO(
-                                modelData.getVertices(),
-                                modelData.getTextureCoords(),
-                                modelData.getNormals(),
-                                modelData.getIndices()
-                        ),
-                        new ModelTexture(loader.loadTexture("white.png"))
-                ),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 0, 0),
-                1
-        );
         List<Entity> entities = new ArrayList<>();
 
         List<Terrain> terrains = new ArrayList<>();
         terrains.add(new Terrain(0, 0, loader));
         List<Light> lights = new ArrayList<>();
         lights.add(new Light(new Vector3f(100, 100, -100), new Vector3f(1, 1, 1)));
-        camera.setTarget(player);
 
+        MousePicker mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
 
         while(!glfwWindowShouldClose(window)) {
             MouseHandler.reset();
@@ -215,7 +202,13 @@ public class DisplayManager {
             }
 
             masterRenderer.render(lights, camera);
-            camera.move();
+            if(MouseHandler.LEFT_PRESSED || MouseHandler.RIGHT_PRESSED || MouseHandler.scroll != 0) {
+                camera.move();
+            } else {
+                mousePicker.update();
+
+                camera.getComponent(PointerComponent.class).setTarget(mousePicker.getCurrentEntity());
+            }
 
             glfwSwapBuffers(window);
         }
