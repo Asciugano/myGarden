@@ -2,6 +2,7 @@ package com.asciugano.engine.entities;
 
 import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
+import com.asciugano.engine.terrains.Terrain;
 import org.joml.Vector3f;
 
 public class Camera extends Entity {
@@ -16,6 +17,9 @@ public class Camera extends Entity {
     private static final float MIN_DISTANCE = 5;
     private float angleAroundTarget;
     private Entity target;
+    private Vector3f panOffset = new Vector3f(0, 0, 0);
+
+    private static final float PAN_SPEED = 0.1f;
 
 
     public Camera() {
@@ -55,10 +59,15 @@ public class Camera extends Entity {
 
     private void calculatePan() {
         if(MouseHandler.LEFT_PRESSED) {
-            position.x += MouseHandler.dx;
-            position.y += MouseHandler.dy;
+            float yawRad = (float) Math.toRadians(yaw);
 
-            // TODO: calcolare il Target sotto la cam
+            Vector3f right = new Vector3f((float) Math.cos(yawRad), 0, -(float) Math.sin(yawRad));
+            Vector3f forward = new Vector3f((float) Math.sin(yawRad), 0, -(float) Math.cos(yawRad));
+
+            right.mul(-MouseHandler.dx * PAN_SPEED);
+            forward.mul(MouseHandler.dy * PAN_SPEED);
+
+            panOffset.add(right).add(forward);
         }
     }
 
@@ -87,8 +96,8 @@ public class Camera extends Entity {
                 float zOffset = (float) (horizDistance * Math.cos(Math.toRadians(angle)));
 
                 Vector3f targetPosition = target.getComponent(TransformationComponent.class).getPosition();
-                position.x = targetPosition.x - xOffset;
-                position.z = targetPosition.z - zOffset;
+                position.x = targetPosition.x - xOffset + panOffset.x;
+                position.z = targetPosition.z - zOffset + panOffset.z;
 
                 position.y = targetPosition.y + vertDistance;
             }

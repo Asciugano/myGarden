@@ -121,24 +121,23 @@ public class DisplayManager {
             float dx = (float)(x - lastX);
             float dy = (float)(y - lastY);
 
+            MouseHandler.dx = dx;
+            MouseHandler.dy = dy;
+
             lastX = (float) x;
             lastY = (float) y;
             if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
                 MouseHandler.LEFT_PRESSED = true;
-                MouseHandler.dx = dx;
             } else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
                 MouseHandler.LEFT_PRESSED = false;
             }
             if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 MouseHandler.RIGHT_PRESSED = true;
-                MouseHandler.dy = dy;
             } else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
                 MouseHandler.RIGHT_PRESSED = false;
             }
             if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
                 MouseHandler.WHEEL_PRESSED = true;
-                MouseHandler.dx = dx;
-                MouseHandler.dy = dy;
             } else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE) {
                 MouseHandler.WHEEL_PRESSED = false;
             }
