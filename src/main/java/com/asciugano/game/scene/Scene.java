@@ -1,4 +1,7 @@
-package com.asciugano.game;
+package com.asciugano.game.scene;
+
+import com.asciugano.game.entity.Entity;
+import com.asciugano.game.terrain.Terrain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,5 +16,13 @@ public class Scene {
 
     public void addTerrain(Terrain terrain) {
         this.terrains.add(terrain);
+    }
+
+    public Terrain getTerrain(Terrain terrain) {
+        return terrains.get(terrains.indexOf(terrain));
+    }
+
+    public Entity getEntity(Entity entity) {
+        return entities.get(entities.indexOf(entity));
     }
 }

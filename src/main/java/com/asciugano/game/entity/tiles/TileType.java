@@ -1,4 +1,4 @@
-package com.asciugano.game.terrain.tiles;
+package com.asciugano.game.entity.tiles;
 
 public enum TileType {
     GRASS_TYPE,

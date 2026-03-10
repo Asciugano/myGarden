@@ -1,13 +1,13 @@
 package com.asciugano.engine.renderer;
 
+import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
-import com.asciugano.engine.entities.Entity;
+import com.asciugano.game.entity.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
-import com.asciugano.engine.skyBox.SkyBoxRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -41,13 +41,13 @@ public class MasterRenderer {
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
-    private SkyBoxRenderer skyBoxRenderer;
+//    private SkyBoxRenderer skyBoxRenderer;
 
     public MasterRenderer(Loader loader) {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-        skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
+//        skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
     }
 
     private void renderTerrain(List<Light> lights, Camera camera) {
@@ -78,7 +78,7 @@ public class MasterRenderer {
         renderTerrain(lights, camera);
         renderEntity(lights, camera);
 
-        skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
+//        skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
         terrains.clear();
         entities.clear();
@@ -89,14 +89,16 @@ public class MasterRenderer {
     }
 
     public void processEntity(Entity entity) {
-        TexturedModel entityModel = entity.getModel();
-        List<Entity> batch = entities.get(entityModel);
-        if(batch != null) {
-            batch.add(entity);
-        } else {
-            List<Entity> newBatch = new ArrayList<>();
-            newBatch.add(entity);
-            entities.put(entityModel, newBatch);
+        if(entity.getComponent(RenderComponent.class) != null) {
+            TexturedModel entityModel = entity.getComponent(RenderComponent.class).getModel();
+            List<Entity> batch = entities.get(entityModel);
+            if (batch != null) {
+                batch.add(entity);
+            } else {
+                List<Entity> newBatch = new ArrayList<>();
+                newBatch.add(entity);
+                entities.put(entityModel, newBatch);
+            }
         }
     }
 

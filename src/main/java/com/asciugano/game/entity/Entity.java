@@ -1,4 +1,4 @@
-package com.asciugano.game;
+package com.asciugano.game.entity;
 
 import com.asciugano.engine.components.Component;
 
@@ -15,4 +15,6 @@ public abstract class Entity {
     public <T extends Component> void addComponent(T component) {
         components.put(component.getClass(), component);
     }
+
+    public void update(float delta) { }
 }

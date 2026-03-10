@@ -102,7 +102,8 @@ public class MousePicker {
     private boolean isUnderGround(Vector3f point) {
         Terrain terrain = getTerrain(point.x, point.z);
         if (terrain == null) return false;
-        float height = terrain.getHeightOfTerrain(point.x, point.z);
+//        float height = terrain.getHeightOfTerrain(point.x, point.z);
+        float height = 0;
         return point.y < height;
     }
 

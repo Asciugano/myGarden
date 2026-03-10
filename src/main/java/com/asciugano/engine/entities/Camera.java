@@ -1,9 +1,10 @@
 package com.asciugano.engine.entities;
 
 import com.asciugano.engine.handlers.mouse.MouseHandler;
+import com.asciugano.game.entity.Entity;
 import org.joml.Vector3f;
 
-public class Camera {
+public class Camera extends Entity {
 
     private Vector3f position;
     private float pitch = 20;
@@ -12,15 +13,15 @@ public class Camera {
     private float distanceFromTarget = 50;
     private float angleAroundTarget;
 
-    private Entity target;
+    private Vector3f targetPoint;
 
     public Camera() {
-        this.target = null;
         this.position = new Vector3f(-300, 5, -300);
+        this.targetPoint = new Vector3f(0,0,0); // default
     }
 
-    public Camera(Entity target) {
-        this.target = target;
+    public void setTargetPoint(Vector3f targetPoint) {
+        this.targetPoint = targetPoint;
     }
 
     public void move() {
@@ -31,17 +32,7 @@ public class Camera {
         float horizontalDistance = calculateHorizontalDistanceFromTarget();
         float verticalDistance = calculateVerticalDistanceFromTarget();
         calculateCameraPosition(horizontalDistance, verticalDistance);
-
-        yaw = 180 - (target.getRotation().y + angleAroundTarget);
     }
-
-    public Vector3f getPosition() { return position; }
-
-    public float getPitch() { return pitch; }
-
-    public float getYaw() { return yaw; }
-
-    public float getRoll() { return roll; }
 
     private void calculateZoom() {
         distanceFromTarget += MouseHandler.scroll;
@@ -66,16 +57,24 @@ public class Camera {
     }
 
     private void calculateCameraPosition(float horizDistance, float vertDistance) {
-        float angle = target.getRotation().y + angleAroundTarget;
+        float angle = angleAroundTarget;
         float xOffset = (float)(horizDistance * Math.sin(Math.toRadians(angle)));
         float zOffset = (float)(horizDistance * Math.cos(Math.toRadians(angle)));
 
-        position.x = target.getPosition().x - xOffset;
-        position.z = target.getPosition().z - zOffset;
+        position.x = targetPoint.x - xOffset;
+        position.z = targetPoint.z - zOffset;
+        position.y = targetPoint.y + vertDistance;
 
-        position.y = target.getPosition().y + vertDistance;
+        yaw = 180 - angle;
     }
 
-    public Entity getTarget() { return target; }
-    public void setTarget(Entity target) { this.target = target; }
+    public Vector3f getPosition() { return position; }
+    public float getPitch() { return pitch; }
+    public float getYaw() { return yaw; }
+    public float getRoll() { return roll; }
+
+
+    public void update(float delta) {
+
+    }
 }

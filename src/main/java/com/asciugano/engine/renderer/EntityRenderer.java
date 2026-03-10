@@ -1,12 +1,15 @@
 package com.asciugano.engine.renderer;
 
-import com.asciugano.engine.entities.Entity;
+//import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.components.OffsetComponent;
+import com.asciugano.engine.components.RenderComponent;
+import com.asciugano.engine.components.TransformationComponent;
+import com.asciugano.game.entity.Entity;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ public class EntityRenderer {
             List<Entity> batch = entities.get(model);
 
             for(Entity entity : batch) {
+                if(entity.getComponent(RenderComponent.class) == null) continue;
                 prepareInstance(entity);
 
                 glDrawElements(
@@ -86,19 +90,20 @@ public class EntityRenderer {
     }
 
     private void prepareInstance(Entity entity) {
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-                entity.getPosition(),
-                entity.getRotation(),
-                entity.getScale()
-        );
+        if(entity.getComponent(TransformationComponent.class) != null) {
+            Matrix4f transformationMatrix = Maths.createTransformationMatrix(
+                    entity.getComponent(TransformationComponent.class).getPosition(),
+                    entity.getComponent(TransformationComponent.class).getRotation(),
+                    entity.getComponent(TransformationComponent.class).getScale()
+            );
 
-        shader.loadTransformationMatrix(transformationMatrix);
+            shader.loadTransformationMatrix(transformationMatrix);
+        }
 
-        shader.loadOffset(
-                new Vector2f(
-                        entity.getTextureXOffset(),
-                        entity.getTextureYOffset()
-                )
-        );
+        if(entity.getComponent(OffsetComponent.class) != null) {
+            shader.loadOffset(
+                    entity.getComponent(OffsetComponent.class).getOffset()
+            );
+        }
     }
 }
