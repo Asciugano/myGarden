@@ -23,10 +23,10 @@ public class Scene {
     private MousePicker mousePicker;
 
     public Scene(Loader loader) {
-        terrains.add(new Terrain());
+        terrains.add(new Terrain(loader));
         camera = new Camera();
         camera.setTarget(terrains.get(0).getTiles()[Terrain.getSize() / 2 - 1][Terrain.getSize() / 2 - 1]);
-        lights.add(new Light(new Vector3f(100, 100, -100), new Vector3f(1, 1, 1)));
+        lights.add(new Light(new Vector3f(Terrain.getPositionFromGrid(Terrain.getSize() / 2, Terrain.getSize() / 2).add(0, 100, 0)), new Vector3f(1, 1, 1)));
 
         this.masterRenderer = new MasterRenderer(loader);
         // TODO: fixare in futuro per qundo si avranno piu terrains

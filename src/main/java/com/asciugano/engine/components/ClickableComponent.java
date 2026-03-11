@@ -18,7 +18,6 @@ public class ClickableComponent implements Component {
 
     public Entity getEntity() { return entity; }
 
-
     public Runnable getOnClick() { return onClick; }
 
     public void setOnClick(Runnable onClick) { this.onClick = onClick; }

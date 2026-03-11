@@ -1,6 +1,5 @@
 package com.asciugano.engine.renderer;
 
-//import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.components.OffsetComponent;
 import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.components.TransformationComponent;

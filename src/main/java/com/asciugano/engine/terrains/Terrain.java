@@ -1,11 +1,9 @@
 package com.asciugano.engine.terrains;
 
+import com.asciugano.engine.renderer.Loader;
 import com.asciugano.game.entity.tiles.Tile;
 import com.asciugano.game.entity.tiles.TileType;
-import com.asciugano.game.entity.tiles.components.TileComponent;
 import org.joml.Vector3f;
-
-import java.util.LinkedList;
 
 public class Terrain {
     private static final int SIZE = 32;
@@ -13,18 +11,22 @@ public class Terrain {
 
     private static Tile[][] tiles =  new Tile[SIZE][SIZE];
 
-    public Terrain() {
-        generateTerrain();
+    public Terrain(Loader loader) {
+        generateTerrain(loader);
     }
 
     private void loadFromFile() {
         // TODO: implementare dopo al salvataggio
     }
 
-    public void generateTerrain() {
+    public void generateTerrain(Loader loader) {
         for(int x = 0; x < SIZE; x++) {
-            for(int y = 0; y < SIZE; y++) {
-                tiles[x][y] = new Tile(TileType.GRASS_TYPE, x, y);
+            for(int z = 0; z < SIZE; z++) {
+                TileType type = TileType.GRASS_TYPE;
+                if(z % 2 == 0 || x % 2 == 0)
+                    type = TileType.PATH_TYPE;
+
+                tiles[x][z] = new Tile(loader, type, x, z);
             }
         }
     }

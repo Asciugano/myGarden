@@ -1,7 +1,17 @@
 package com.asciugano.game.entity.tiles;
 
 public enum TileType {
-    GRASS_TYPE,
-    WATER_TYPE,
-    SOIL_TYPE,
+    PATH_TYPE("gray.png"),
+    DIRT_TYPE("green.png"),
+    GRASS_TYPE("green.png"),
+    WATER_TYPE("green.png"),
+    SOIL_TYPE("green.png");
+
+    private final String textureName;
+
+    TileType(String textureName) {
+        this.textureName = textureName;
+    }
+
+    public String getTextureName() { return textureName; }
 }
