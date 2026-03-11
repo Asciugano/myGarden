@@ -8,6 +8,7 @@ import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
+import com.asciugano.engine.shaders.TileShader;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
@@ -35,9 +36,10 @@ public class MasterRenderer {
 
     private Matrix4f projectionMatrix;
     private StaticShader shader = new StaticShader();
+    private TerrainShader terrainShader = new TerrainShader();
+    private TileShader tileShader = new TileShader();
     private EntityRenderer entityRenderer;
 
-    private TerrainShader terrainShader = new TerrainShader();
     private TileRenderer tileRenderer;
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
@@ -47,14 +49,14 @@ public class MasterRenderer {
     public MasterRenderer(Loader loader) {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(shader, projectionMatrix);
-        tileRenderer = new TileRenderer(shader, projectionMatrix);
+        tileRenderer = new TileRenderer(tileShader, projectionMatrix);
 //        skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
     }
 
-    private void renderEntity(List<Light> lights, Camera camera) {
+    private void renderEntity(Light light, Camera camera) {
         shader.start();
         shader.loadSkyColor(RED,GREEN,BLUE);
-        shader.loadLights(lights);
+        shader.loadLights(light);
         shader.loadViewMatrix(camera);
 
         entityRenderer.render(entities);
@@ -63,22 +65,22 @@ public class MasterRenderer {
         entities.clear();
     }
 
-    private void renderTile(List<Light> lights, Camera camera) {
-        shader.start();
-        shader.loadLights(lights);
-        shader.loadViewMatrix(camera);
+    private void renderTile(Light lights, Camera camera) {
+        tileShader.start();
+        tileShader.loadLights(lights);
+        tileShader.loadViewMatrix(camera);
 
         tileRenderer.render(tiles);
 
-        shader.stop();
+        tileShader.stop();
         tiles.clear();
     }
 
-    public void render(List<Light> lights, Camera camera) {
+    public void render(Light light, Camera camera) {
         prepare();
 
-        renderEntity(lights, camera);
-        renderTile(lights, camera);
+        renderEntity(light, camera);
+        renderTile(light, camera);
 
 //        skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
@@ -130,6 +132,7 @@ public class MasterRenderer {
 
     public void cleanUp() {
         shader.cleanUp();
+        tileShader.cleanUp();
         terrainShader.cleanUp();
     }
 

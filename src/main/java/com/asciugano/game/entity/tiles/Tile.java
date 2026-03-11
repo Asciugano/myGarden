@@ -18,6 +18,17 @@ public class Tile extends ComponentUser {
     private TileType tileType;
     private TexturedModel model;
 
+    public Tile(Loader loader, TileType tileType, float x, float z, int gridX, int gridZ) {
+        this.gridX = (int) (x / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
+        this.gridZ = (int) (x / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
+        this.tileType = tileType;
+
+        this.model = createModel(loader);
+        addComponent(new TransformationComponent(new Vector3f(x, 0, z), new Vector3f(0, 0, 0), TILE_SIZE));
+        addComponent(new ClickableComponent(this::onClick));
+        addComponent(new RenderComponent(model));
+    }
+
     public Tile(Loader loader, TileType tileType, int gridX, int gridZ) {
         this.gridX = gridX;
         this.gridZ = gridZ;

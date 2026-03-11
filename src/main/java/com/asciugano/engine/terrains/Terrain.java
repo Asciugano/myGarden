@@ -25,24 +25,29 @@ public class Terrain {
     }
 
     public void generateTerrain(Loader loader) {
+        float offset = (float) (SIZE * Tile.getTileSize()) / 2;
+
         for(int x = 0; x < SIZE; x++) {
             for(int z = 0; z < SIZE; z++) {
                 TileType type = TileType.GRASS_TYPE;
-                if(z % 2 == 0 || x % 2 == 0)
-                    type = TileType.PATH_TYPE;
+//                if(z % 2 == 0 || x % 2 == 0)
+//                    type = TileType.PATH_TYPE;
 
-                tiles[x][z] = new Tile(loader, type, x, z);
+                float worldX = x * Tile.getTileSize() - offset;
+                float worldZ = z * Tile.getTileSize() - offset;
+                tiles[x][z] = new Tile(loader, type, worldX, worldZ, x, z);
             }
         }
     }
 
     public static Vector3f getPositionFromGrid(int x, int z) {
-        return new Vector3f(x * Tile.getTileSize(), 0, z * Tile.getTileSize());
+        return new Vector3f(x * Tile.getTileSize() - (float) SIZE / 2, 0, z * Tile.getTileSize() - (float) SIZE / 2);
     }
 
     public static Tile getTileFromWorld(float x, float z) {
-        int gridX = (int) (x / Tile.getTileSize());
-        int gridZ = (int) (z / Tile.getTileSize());
+        float offset = (float) (SIZE * Tile.getTileSize()) / 2;
+        int gridX = (int) ((x + offset) / Tile.getTileSize());
+        int gridZ = (int) ((z + offset) / Tile.getTileSize());
 
         if(gridX < 0 || gridZ < 0 || gridX >= SIZE || gridZ >= SIZE) {
             return null;

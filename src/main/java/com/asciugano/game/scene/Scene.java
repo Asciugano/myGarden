@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
-    private List<Light> lights = new ArrayList<>();
+    private Light light;
     private Camera camera;
     private List<Terrain> terrains = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
@@ -25,16 +25,16 @@ public class Scene {
     public Scene(Loader loader) {
         terrains.add(new Terrain(loader));
         camera = new Camera();
-        camera.setTarget(terrains.get(0).getTiles()[Terrain.getSize() / 2 - 1][Terrain.getSize() / 2 - 1]);
-        lights.add(new Light(new Vector3f(Terrain.getPositionFromGrid(Terrain.getSize() / 2, Terrain.getSize() / 2).add(0, 100, 0)), new Vector3f(1, 1, 1)));
+        camera.setTarget(Terrain.getTileFromWorld(0, 0));
+        light = new Light(new Vector3f(0, 100, 100), new Vector3f(1, 1, 1));
 
         this.masterRenderer = new MasterRenderer(loader);
-        // TODO: fixare in futuro per qundo si avranno piu terrains
+        // TODO: fixare in futuro per quando si avranno piu terrains
         mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
     }
 
-    public Scene(Loader loader, List<Light> lights, Camera camera, List<Terrain> terrains, List<Entity> entities) {
-        this.lights = lights;
+    public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
+        this.light = light;
         this.camera = camera;
         this.terrains = terrains;
         this.entities = entities;
@@ -76,10 +76,10 @@ public class Scene {
             masterRenderer.processEntity(entity);
         }
 
-        masterRenderer.render(lights, camera);
+        masterRenderer.render(light, camera);
     }
 
-    public List<Light> getLights() { return lights; }
+    public Light getLight() { return light; }
 
     public Camera getCamera() { return camera; }
 

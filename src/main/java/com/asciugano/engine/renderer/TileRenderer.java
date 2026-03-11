@@ -1,15 +1,13 @@
 package com.asciugano.engine.renderer;
 
-import com.asciugano.engine.components.OffsetComponent;
 import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
-import com.asciugano.engine.shaders.StaticShader;
+import com.asciugano.engine.shaders.TileShader;
 import com.asciugano.engine.utils.Maths;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +19,9 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class TileRenderer {
-    private StaticShader shader;
+    private TileShader shader;
 
-    public TileRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+    public TileRenderer(TileShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -52,10 +50,7 @@ public class TileRenderer {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        shader.loadShineVariables(texturedModel.getTexture().getShineDamper(), texturedModel.getTexture().getReflectivity());
-
         shader.connectTextureUnits();
-        shader.loadNumberOfRows(texturedModel.getTexture().getNumberOfRows());
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texturedModel.getTexture().getTextureID());
@@ -80,9 +75,6 @@ public class TileRenderer {
                     )
             );
         }
-
-        OffsetComponent oc = tile.getComponent(OffsetComponent.class);
-        if(oc != null) shader.loadOffset(oc.getOffset());
     }
 
     public void clenUp() {
