@@ -56,13 +56,6 @@ public class Scene {
         mousePicker.update();
         camera.move();
 
-        for (Terrain terrain : terrains) {
-            for(Tile[] tiles: terrain.getTiles()) {
-                for(Tile tile : tiles) {
-                    tile.update(dt);
-                }
-            }
-        }
         for(Entity entity : entities) {
             entity.update(dt);
         }
@@ -77,11 +70,7 @@ public class Scene {
 
     public void render() {
         for(Terrain terrain : terrains) {
-            for(Tile[] tiles : terrain.getTiles()) {
-                for(Tile tile : tiles) {
-                    masterRenderer.processEntity(tile);
-                }
-            }
+            masterRenderer.processTerrain(terrain);
         }
         for(Entity entity : entities) {
             masterRenderer.processEntity(entity);

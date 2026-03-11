@@ -1,16 +1,16 @@
 package com.asciugano.game.entity.tiles;
 
 import com.asciugano.engine.components.ClickableComponent;
+import com.asciugano.engine.components.ComponentUser;
 import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.components.TransformationComponent;
-import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.textures.ModelTexture;
 import org.joml.Vector3f;
 
-public class Tile extends Entity {
+public class Tile extends ComponentUser {
     private static final int TILE_SIZE = 4;
     public static int getTileSize() { return TILE_SIZE; }
 
@@ -26,7 +26,7 @@ public class Tile extends Entity {
         this.model = createModel(loader);
 
         addComponent(new TransformationComponent(Terrain.getPositionFromGrid(gridX, gridZ), new Vector3f(0, 0, 0), TILE_SIZE));
-        addComponent(new ClickableComponent(this, this::onClick));
+        addComponent(new ClickableComponent(this::onClick));
         addComponent(new RenderComponent(model));
     }
 
@@ -57,7 +57,9 @@ public class Tile extends Entity {
         );
     }
 
-    protected void onClick() { }
+    protected void onClick() {
+        System.out.println("click the tile: " + gridX + ", " + gridZ);
+    }
 
     public int getGridX() { return gridX; }
 
@@ -66,8 +68,4 @@ public class Tile extends Entity {
     public int getGridZ() { return gridZ; }
 
     public void setGridZ(int gridZ) { this.gridZ = gridZ; }
-
-    public void update(float delta) {
-//        TODO: update
-    }
 }

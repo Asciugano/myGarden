@@ -5,11 +5,16 @@ import com.asciugano.game.entity.tiles.Tile;
 import com.asciugano.game.entity.tiles.TileType;
 import org.joml.Vector3f;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Terrain {
     private static final int SIZE = 32;
     public static int getSize() { return SIZE; }
 
     private static Tile[][] tiles =  new Tile[SIZE][SIZE];
+    private Map<TileType, List<Vector3f>> tilesPerType = new HashMap<>();
 
     public Terrain(Loader loader) {
         generateTerrain(loader);

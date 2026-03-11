@@ -1,20 +1,9 @@
 package com.asciugano.engine.entities;
 
-import com.asciugano.engine.components.Component;
+import com.asciugano.engine.components.ComponentUser;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public abstract class Entity {
-    private Map<Class<? extends  Component>, Component> components = new HashMap<>();
-
-    public <T extends Component> T getComponent(Class<T> componentClass) {
-        return componentClass.cast(components.get(componentClass));
-    }
-
-    public <T extends Component> void addComponent(T component) {
-        components.put(component.getClass(), component);
-    }
+public abstract class Entity extends ComponentUser {
 
     public void update(float delta) { }
 }

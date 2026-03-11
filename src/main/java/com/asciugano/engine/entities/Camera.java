@@ -3,6 +3,7 @@ package com.asciugano.engine.entities;
 import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
 import com.asciugano.engine.terrains.Terrain;
+import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector3f;
 
 public class Camera extends Entity {
@@ -16,7 +17,7 @@ public class Camera extends Entity {
     private float distanceFromTarget = 50;
     private static final float MIN_DISTANCE = 5;
     private float angleAroundTarget;
-    private Entity target;
+    private Tile target;
     private Vector3f panOffset = new Vector3f(0, 0, 0);
 
     private static final float PAN_SPEED = 0.1f;
@@ -116,8 +117,8 @@ public class Camera extends Entity {
         }
     }
 
-    public Entity getTarget() { return target;}
-    public void setTarget(Entity target) {
+    public Tile getTarget() { return target;}
+    public void setTarget(Tile target) {
         this.target = target;
     }
 }

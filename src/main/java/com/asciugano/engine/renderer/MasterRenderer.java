@@ -8,6 +8,8 @@ import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
+import com.asciugano.engine.terrains.Terrain;
+import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -36,13 +38,16 @@ public class MasterRenderer {
     private EntityRenderer entityRenderer;
 
     private TerrainShader terrainShader = new TerrainShader();
+    private TileRenderer tileRenderer;
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+    private Map<TexturedModel, List<Tile>> tiles = new HashMap<>();
 //    private SkyBoxRenderer skyBoxRenderer;
 
     public MasterRenderer(Loader loader) {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(shader, projectionMatrix);
+        tileRenderer = new TileRenderer(shader, projectionMatrix);
 //        skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
     }
 
@@ -58,16 +63,47 @@ public class MasterRenderer {
         entities.clear();
     }
 
+    private void renderTile(List<Light> lights, Camera camera) {
+        shader.start();
+        shader.loadLights(lights);
+        shader.loadViewMatrix(camera);
+
+        tileRenderer.render(tiles);
+
+        shader.stop();
+        tiles.clear();
+    }
+
     public void render(List<Light> lights, Camera camera) {
         prepare();
 
         renderEntity(lights, camera);
+        renderTile(lights, camera);
 
 //        skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
         entities.clear();
+        tiles.clear();
     }
 
+    public void processTerrain(Terrain terrain) {
+        for(Tile[] tilesA : terrain.getTiles()) {
+            for(Tile tile : tilesA) {
+                RenderComponent rc = tile.getComponent(RenderComponent.class);
+                if(rc == null) continue;
+
+                TexturedModel model = rc.getModel();
+                List<Tile> batch = tiles.get(model);
+                if(batch != null) {
+                    batch.add(tile);
+                } else {
+                    List<Tile> newBatch = new ArrayList<>();
+                    newBatch.add(tile);
+                    tiles.put(model, newBatch);
+                }
+            }
+        }
+    }
     public void processEntity(Entity entity) {
         if(entity.getComponent(RenderComponent.class) != null) {
             TexturedModel entityModel = entity.getComponent(RenderComponent.class).getModel();

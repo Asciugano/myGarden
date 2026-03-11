@@ -39,7 +39,7 @@ public class MousePicker {
         return currentTerrainPoint;
     }
 
-    public Entity getCurrentEntity() {
+    public Tile getCurrentTile() {
         return Terrain.getTileFromWorld(currentTerrainPoint.x, currentTerrainPoint.z);
     }
 
