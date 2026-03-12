@@ -1,9 +1,5 @@
 package com.asciugano.game.entity.tiles;
 
-import com.asciugano.engine.components.ClickableComponent;
-import com.asciugano.engine.components.ComponentUser;
-import com.asciugano.engine.components.RenderComponent;
-import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.terrains.Terrain;

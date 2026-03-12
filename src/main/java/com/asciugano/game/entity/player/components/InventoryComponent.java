@@ -1,6 +1,5 @@
 package com.asciugano.game.entity.player.components;
 
-import com.asciugano.engine.components.Component;
 import com.asciugano.engine.entities.Entity;
 
 import java.util.ArrayList;

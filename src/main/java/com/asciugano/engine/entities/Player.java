@@ -1,7 +1,5 @@
 package com.asciugano.engine.entities;
 
-import com.asciugano.engine.components.RenderComponent;
-import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.models.TexturedModel;
 import org.joml.Vector3f;
 

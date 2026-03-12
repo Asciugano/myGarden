@@ -1,8 +1,6 @@
 package com.asciugano.engine.entities;
 
-import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
-import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector3f;
 

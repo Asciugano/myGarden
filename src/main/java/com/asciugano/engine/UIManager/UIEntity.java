@@ -1,8 +1,5 @@
 package com.asciugano.engine.UIManager;
 
-import com.asciugano.engine.components.ComponentUser;
-import com.asciugano.engine.components.TransformationComponent;
-import com.asciugano.engine.components.UIComponent;
 import com.asciugano.engine.utils.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

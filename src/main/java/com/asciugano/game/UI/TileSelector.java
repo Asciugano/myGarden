@@ -2,10 +2,6 @@ package com.asciugano.game.UI;
 
 import com.asciugano.engine.UIManager.UIEntity;
 import com.asciugano.engine.UIManager.UITexture;
-import com.asciugano.engine.components.ClickableComponent;
-import com.asciugano.engine.components.ComponentUser;
-import com.asciugano.engine.components.TransformationComponent;
-import com.asciugano.engine.components.UIComponent;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.game.entity.tiles.Tile;

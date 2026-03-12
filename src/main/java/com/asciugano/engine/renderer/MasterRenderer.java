@@ -1,6 +1,5 @@
 package com.asciugano.engine.renderer;
 
-import com.asciugano.engine.components.RenderComponent;
 import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;

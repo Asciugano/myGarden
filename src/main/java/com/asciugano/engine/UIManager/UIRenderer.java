@@ -1,13 +1,11 @@
 package com.asciugano.engine.UIManager;
 
-import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Maths;
 
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;

@@ -2,11 +2,10 @@ package com.asciugano.game.scene;
 
 import com.asciugano.engine.UIManager.UIEntity;
 import com.asciugano.engine.UIManager.UIRenderer;
-import com.asciugano.engine.UIManager.UIShader;
 import com.asciugano.engine.UIManager.UITexture;
-import com.asciugano.engine.components.UIComponent;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.entities.EntityManager;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.handlers.mouse.MousePicker;
 import com.asciugano.engine.renderer.Loader;
@@ -14,7 +13,6 @@ import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.game.UI.TileSelector;
-import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -32,6 +30,8 @@ public class Scene {
     private List<UIEntity> uis = new ArrayList<>();
     private MousePicker mousePicker;
     private TileSelector tileSelector;
+
+    public EntityManager entityManager = new EntityManager();
 
     public Scene(Loader loader) {
         terrains.add(new Terrain(loader));
@@ -95,7 +95,7 @@ public class Scene {
         }
 
         for(Entity entity : entities) {
-            entity.update(dt);
+            entity.update();
         }
     }
     public Terrain getTerrain(Terrain terrain) {
