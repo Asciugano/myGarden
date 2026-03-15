@@ -16,13 +16,13 @@ public class TileShader extends ShaderProgram {
     private int location_projectionMatrix;
     private int location_viewMatrix;
 
-    private int location_color;
-
     public TileShader() { super(VERTEX_FILE, FRAGMENT_FILE); }
 
     @Override
     protected void bindAttributes() {
         bindAttribute(0, "position");
+        bindAttribute(1, "color");
+        bindAttribute(2, "normal");
     }
 
     @Override
@@ -30,8 +30,6 @@ public class TileShader extends ShaderProgram {
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
-
-        location_color = super.getUniformLocation("color");
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -42,11 +40,7 @@ public class TileShader extends ShaderProgram {
         super.loadMatrix(location_viewMatrix, Maths.createViewMatrix(camera));
     }
 
-    public void loadProjectionMatrix(Matrix4f matrix) {
-        super.loadMatrix(location_projectionMatrix, matrix);
-    }
-    public void loadColor(Color color) { super.loadVector3(location_color, color.color); }
-
+    public void loadProjectionMatrix(Matrix4f matrix) { super.loadMatrix(location_projectionMatrix, matrix); }
     public int getProgramID() {
         return super.getProgramID();
     }

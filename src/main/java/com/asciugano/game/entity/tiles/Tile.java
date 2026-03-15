@@ -19,7 +19,7 @@ public class Tile {
     public int getGridX() { return gridX; }
     public int getGridZ() { return gridZ; }
     public Vector3f getWorldPos() {
-        float offset = TILE_SIZE / 2f;
-        return new Vector3f((gridX - offset) * TILE_SIZE, 0, (gridZ - offset) * TILE_SIZE);
+        float offset = Terrain.offset(gridX, gridZ);
+        return new Vector3f(gridX * TILE_SIZE - offset, 0, gridZ * TILE_SIZE - offset);
     }
 }

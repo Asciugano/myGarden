@@ -39,13 +39,15 @@ public class MeshBuilder {
         indices.add(v3);
         indices.add(v0);
 
-        normals.add(n.x);
-        normals.add(n.y);
-        normals.add(n.z);
+        for(int i = 0; i < 4; i++) {
+            normals.add(n.x);
+            normals.add(n.y);
+            normals.add(n.z);
 
-        colors.add(color.color.x);
-        colors.add(color.color.y);
-        colors.add(color.color.z);
+            colors.add(color.color.x);
+            colors.add(color.color.y);
+            colors.add(color.color.z);
+        }
     }
 
     public int[] getIndices() { return indices.stream().mapToInt(Integer::intValue).toArray(); }

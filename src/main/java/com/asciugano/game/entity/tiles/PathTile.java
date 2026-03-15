@@ -2,6 +2,7 @@ package com.asciugano.game.entity.tiles;
 
 import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.models.QuadBuilder;
+import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Vector3f;
@@ -12,8 +13,8 @@ public class PathTile extends TerrainTile {
     private static final float HEIGHT = -0.2f;
     private static final float OFFSET = 0.1f;
 
-    public PathTile(Tile tile) {
-        super(tile);
+    public PathTile(Tile tile, Loader loader) {
+        super(tile, loader);
     }
 
     @Override

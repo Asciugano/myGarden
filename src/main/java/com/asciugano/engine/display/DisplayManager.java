@@ -1,18 +1,9 @@
 package com.asciugano.engine.display;
 
-import com.asciugano.engine.entities.Camera;
-//import com.asciugano.engine.entities.Entity;
-import com.asciugano.engine.entities.Entity;
-import com.asciugano.engine.handlers.mouse.MousePicker;
-import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.handlers.KeyHandler;
 import com.asciugano.engine.handlers.mouse.MouseHandler;
 import com.asciugano.engine.renderer.Loader;
-import com.asciugano.engine.renderer.MasterRenderer;
-import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.game.entity.tiles.Tile;
 import com.asciugano.game.scene.Scene;
-import org.joml.Vector3f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -20,8 +11,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -36,6 +25,8 @@ public class DisplayManager {
 
     private static float lastFrameTime;
     private static float delta;
+
+    private static boolean polyMode = false;
 
     private float lastX, lastY;
 
@@ -90,6 +81,16 @@ public class DisplayManager {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true);
+            if(key == GLFW_KEY_P && action == GLFW_PRESS ) {
+                polyMode = !polyMode;
+
+                if(polyMode)
+                    glDisable(GL_POLYGON_MODE);
+                else
+                    glEnable(GL_POLYGON_MODE);
+
+                System.out.println("Polygon mode " + (polyMode ? "on" : "off"));
+            }
 
             switch (key) {
                 case GLFW_KEY_SPACE -> {

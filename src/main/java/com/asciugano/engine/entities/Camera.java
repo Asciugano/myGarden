@@ -22,7 +22,7 @@ public class Camera {
 
 
     public Camera() {
-        this.position = new Vector3f(-300, 5, -300);
+        this.position = new Vector3f(0, 10, 0);
     }
 
     public void move() {

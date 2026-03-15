@@ -2,6 +2,7 @@ package com.asciugano.engine.renderer;
 
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.textures.TextureData;
+import com.asciugano.engine.utils.Color;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
@@ -42,16 +43,15 @@ public class Loader {
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> textures = new ArrayList<>();
 
-    public RawModel loadToVAO(float[] position, float[] textureCoords, float[] normals, int[] indices) {
+    public RawModel loadToVAO(float[] position, float[] attribute, int attributeSize, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
 
         storeDataInAttributeList(0, 3, position);
-        storeDataInAttributeList(1, 2, textureCoords);
+        storeDataInAttributeList(1, attributeSize, attribute);
         storeDataInAttributeList(2, 3, normals);
 
         unbindVAO();
-
         return new RawModel(vaoID, indices.length);
     }
 

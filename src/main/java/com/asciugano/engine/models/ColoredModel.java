@@ -8,10 +8,9 @@ public class ColoredModel {
     private RawModel model;
     private Color color;
 
-    public ColoredModel(float[] vertices, float[] normals, float[] colors, int[] indices) {
-        Loader loader = new Loader();
-        model = loader.loadToVAO(vertices, normals, colors, indices);
-        color = new Color(new Vector3f(0, 0, 0));
+    public ColoredModel(RawModel model, Color color) {
+        this.model = model;
+        this.color = color;
     }
 
     public RawModel getRawModel() { return model; }

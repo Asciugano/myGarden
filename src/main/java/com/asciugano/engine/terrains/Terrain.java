@@ -1,22 +1,14 @@
 package com.asciugano.engine.terrains;
 
 import com.asciugano.engine.renderer.Loader;
-import com.asciugano.game.entity.tiles.GrassTile;
-import com.asciugano.game.entity.tiles.TerrainTile;
-import com.asciugano.game.entity.tiles.Tile;
-import com.asciugano.game.entity.tiles.TileType;
+import com.asciugano.game.entity.tiles.*;
 import org.joml.Vector3f;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Terrain {
     private static final int SIZE = 32;
     public static int getSize() { return SIZE; }
 
     private static final TerrainTile[][] tiles =  new TerrainTile[SIZE][SIZE];
-    private Map<TileType, List<Vector3f>> tilesPerType = new HashMap<>();
 
     public Terrain(Loader loader) {
         generateTerrain(loader);
@@ -27,17 +19,12 @@ public class Terrain {
     }
 
     public void generateTerrain(Loader loader) {
-        float offset = (float) (SIZE * Tile.getTileSize()) / 2;
-
         for(int x = 0; x < SIZE; x++) {
             for(int z = 0; z < SIZE; z++) {
-                TileType type = TileType.GRASS_TYPE;
-                if((x + z) % 2 == 0)
-                    type = TileType.PATH_TYPE;
+                TileType type = (x + z) % 2 == 0 ? TileType.GRASS_TYPE : TileType.PATH_TYPE;
 
-                float worldX = x * Tile.getTileSize() - offset;
-                float worldZ = z * Tile.getTileSize() - offset;
-                tiles[x][z] = new GrassTile(new Tile(x, z));
+                tiles[x][z] = new PathTile(new Tile(x, z), loader);
+                System.out.println("pos: " + tiles[x][z].getWorldPos());
             }
         }
     }
@@ -47,15 +34,17 @@ public class Terrain {
     }
 
     public static TerrainTile getTileFromWorld(float x, float z) {
-        int gridX = (int) Math.floor(x / Tile.getTileSize() + SIZE / 2f);
-        int gridZ = (int) Math.floor(z / Tile.getTileSize() + SIZE / 2f);
+        int gridX = (int) Math.floor((x + offset(x, z)) / Tile.getTileSize());
+        int gridZ = (int) Math.floor((z + offset(x, z)) / Tile.getTileSize());
 
-        if(gridX < 0 || gridZ < 0 || gridX >= SIZE || gridZ >= SIZE) {
-            return null;
-        }
+        if (gridX < 0 || gridZ < 0 || gridX >= SIZE || gridZ >= SIZE) return null;
 
         return tiles[gridX][gridZ];
     }
 
     public TerrainTile[][] getTiles() { return tiles; }
+
+    public static float offset(float x, float z) {
+        return (SIZE * Tile.getTileSize()) / 2f;
+    }
 }

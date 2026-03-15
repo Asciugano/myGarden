@@ -143,7 +143,7 @@ public class MasterRenderer {
 
     public static void enableCulling() {
         glEnable(GL_CULL_FACE);
-        glEnable(GL_BACK);
+        glCullFace(GL_BACK);
     }
 
     public static void disableCulling() {
@@ -154,7 +154,7 @@ public class MasterRenderer {
         float aspectRatio = (float) DisplayManager.getWidth() / (float) DisplayManager.getHeight();
 
         projectionMatrix = new Matrix4f().perspective(
-                FOV,
+                (float) Math.toRadians(FOV),
                 aspectRatio,
                 NEAR_PLANE,
                 FAR_PLANE

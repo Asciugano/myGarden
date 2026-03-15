@@ -38,8 +38,6 @@ public class TileRenderer {
             for(Tile tile : batch) {
                 prepareInstance(tile);
 
-                shader.loadColor(model.getColor());
-
                 glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
 
@@ -51,11 +49,15 @@ public class TileRenderer {
         RawModel rawModel = coloredModel.getRawModel();
         glBindVertexArray(rawModel.getVaoID());
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
     }
 
     private void unbindModel() {
         MasterRenderer.enableCulling();
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
         glBindVertexArray(0);
     }
 

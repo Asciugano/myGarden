@@ -38,6 +38,7 @@ public class Scene {
         terrains.add(new Terrain(loader));
         camera = new Camera();
         camera.setTarget(Terrain.getTileFromWorld(0, 0));
+        System.out.println("camera pos: " + camera.getPosition());
         light = new Light(new Vector3f(0, 100, 100), new Vector3f(1, 1, 1));
 
         this.masterRenderer = new MasterRenderer(loader);
