@@ -8,11 +8,18 @@ import com.asciugano.engine.utils.Maths;
 import org.joml.Vector3f;
 
 public class GrassTile extends TerrainTile {
-  private static final Color COLOR = new Color(new Vector3f(0.2f, 0.7f, 0.2f));
+  private final Color COLOR = generateColor();
   private static final float HEIGHT = 0.3f;
 
   public GrassTile(Tile tile, Loader loader) {
     super(tile, loader);
+    super.bindModel(loader, COLOR);
+  }
+
+  private Color generateColor() {
+    float variation = (float) (Math.random() * 0.1f - 0.05f);
+    Vector3f base = new Vector3f(0.2f, 0.7f, 0.2f);
+    return new Color(base.add(variation, variation, variation));
   }
 
   @Override

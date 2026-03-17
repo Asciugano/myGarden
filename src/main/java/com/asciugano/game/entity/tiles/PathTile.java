@@ -15,6 +15,7 @@ public class PathTile extends TerrainTile {
 
   public PathTile(Tile tile, Loader loader) {
     super(tile, loader);
+    super.bindModel(loader, COLOR);
   }
 
   @Override

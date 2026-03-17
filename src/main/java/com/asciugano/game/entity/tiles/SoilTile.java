@@ -15,6 +15,7 @@ public class SoilTile extends TerrainTile {
 
   public SoilTile(Tile tile, Loader loader) {
     super(tile, loader);
+    super.bindModel(loader, COLOR);
   }
 
   @Override

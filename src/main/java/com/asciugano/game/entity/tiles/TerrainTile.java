@@ -10,6 +10,9 @@ public abstract class TerrainTile extends Tile {
 
   public TerrainTile(Tile tile, Loader loader) {
     super(tile.getGridX(), tile.getGridZ());
+  }
+
+  protected void bindModel(Loader loader, Color color) {
     MeshBuilder meshBuilder = new MeshBuilder();
 
     generateMeshVertices(meshBuilder);
@@ -20,7 +23,7 @@ public abstract class TerrainTile extends Tile {
             3,
             meshBuilder.getNormals(),
             meshBuilder.getIndices()),
-        new Color(Color.WHITE));
+        color);
   }
 
   public ColoredModel getModel() {

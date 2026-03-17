@@ -15,6 +15,7 @@ public class DirtTile extends TerrainTile {
 
   public DirtTile(Tile tile, Loader loader) {
     super(tile, loader);
+    super.bindModel(loader, COLOR);
   }
 
   @Override
