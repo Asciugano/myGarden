@@ -20,6 +20,20 @@ public class MeshBuilder {
     vertices.add(pos.z);
   }
 
+  public void addVertex(Vector3f pos, Vector3f normal, Color color) {
+    vertices.add(pos.x);
+    vertices.add(pos.y);
+    vertices.add(pos.z);
+
+    normals.add(normal.x);
+    normals.add(normal.y);
+    normals.add(normal.z);
+
+    colors.add(color.color.x);
+    colors.add(color.color.y);
+    colors.add(color.color.z);
+  }
+
   public void addQuad(int v0, int v1, int v2, int v3, Color color) {
     indices.add(v0);
     indices.add(v1);
