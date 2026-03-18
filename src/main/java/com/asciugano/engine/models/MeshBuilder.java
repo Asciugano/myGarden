@@ -34,6 +34,24 @@ public class MeshBuilder {
     colors.add(color.color.z);
   }
 
+  public void addQuad(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f v3, Color color) {
+    Vector3f normal = calculateNormal(v0, v1, v2);
+
+    int startIndex = vertices.size() / 3;
+    addVertex(v0, normal, color);
+    addVertex(v1, normal, color);
+    addVertex(v2, normal, color);
+    addVertex(v3, normal, color);
+
+    indices.add(startIndex);
+    indices.add(startIndex + 1);
+    indices.add(startIndex + 2);
+
+    indices.add(startIndex + 2);
+    indices.add(startIndex + 3);
+    indices.add(startIndex);
+  }
+
   public void addQuad(int v0, int v1, int v2, int v3, Color color) {
     indices.add(v0);
     indices.add(v1);
@@ -70,6 +88,19 @@ public class MeshBuilder {
       colors.add(color.color.y);
       colors.add(color.color.z);
     }
+  }
+
+  private Vector3f calculateNormal(Vector3f v0, Vector3f v1, Vector3f v2) {
+    Vector3f edge1 = new Vector3f();
+    Vector3f edge2 = new Vector3f();
+
+    v1.sub(v0, edge1);
+    v2.sub(v0, edge2);
+
+    Vector3f normal = new Vector3f();
+    edge1.cross(edge2, normal);
+
+    return normal.normalize();
   }
 
   public int[] getIndices() {

@@ -1,6 +1,8 @@
 package com.asciugano.engine.shaders;
 
 import com.asciugano.engine.entities.Camera;
+import com.asciugano.engine.entities.Light;
+import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Matrix4f;
 
@@ -14,6 +16,9 @@ public class TileShader extends ShaderProgram {
   private int location_transformationMatrix;
   private int location_projectionMatrix;
   private int location_viewMatrix;
+
+  private int location_lightDirection;
+  private int location_lightColor;
 
   public TileShader() {
     super(VERTEX_FILE, FRAGMENT_FILE);
@@ -31,10 +36,18 @@ public class TileShader extends ShaderProgram {
     location_transformationMatrix = super.getUniformLocation("transformationMatrix");
     location_projectionMatrix = super.getUniformLocation("projectionMatrix");
     location_viewMatrix = super.getUniformLocation("viewMatrix");
+
+    location_lightDirection = super.getUniformLocation("lightDirection");
+    location_lightColor = super.getUniformLocation("lightColor");
   }
 
   public void loadTransformationMatrix(Matrix4f matrix) {
     super.loadMatrix(location_transformationMatrix, matrix);
+  }
+
+  public void loadLight(Light light) {
+    super.loadVector3(location_lightDirection, light.getPosition());
+    super.loadVector3(location_lightColor, light.getColor());
   }
 
   public void loadViewMatrix(Camera camera) {

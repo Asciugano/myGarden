@@ -32,19 +32,57 @@ public class PathTile extends TerrainTile {
   protected void generateMeshVertices(MeshBuilder meshBuilder) {
     QuadBuilder builder = new QuadBuilder(meshBuilder);
 
-    builder.addVertex(new Vector3f(0, HEIGHT, 0));
-    builder.addVertex(new Vector3f(0, HEIGHT, 1));
-    builder.addVertex(new Vector3f(1, HEIGHT, 1));
-    builder.addVertex(new Vector3f(1, HEIGHT, 0));
-    builder.addVertex(new Vector3f(OFFSET, 0, OFFSET));
-    builder.addVertex(new Vector3f(OFFSET, 0, 1 - OFFSET));
-    builder.addVertex(new Vector3f(1 - OFFSET, 0, 1 - OFFSET));
-    builder.addVertex(new Vector3f(1 - OFFSET, 0, OFFSET));
-    builder.generateQuad(4, 5, 6, 7, Maths.UP, COLOR);
-    builder.generateQuad(5, 1, 2, 6, COLOR);
-    builder.generateQuad(6, 2, 3, 7, COLOR);
-    builder.generateQuad(7, 3, 0, 4, COLOR);
-    builder.generateQuad(0, 3, 2, 1, COLOR);
-    builder.generateQuad(4, 0, 1, 5, COLOR);
+    // builder.addVertex(new Vector3f(0, HEIGHT, 0));
+    // builder.addVertex(new Vector3f(0, HEIGHT, 1));
+    // builder.addVertex(new Vector3f(1, HEIGHT, 1));
+    // builder.addVertex(new Vector3f(1, HEIGHT, 0));
+    // builder.addVertex(new Vector3f(OFFSET, 0, OFFSET));
+    // builder.addVertex(new Vector3f(OFFSET, 0, 1 - OFFSET));
+    // builder.addVertex(new Vector3f(1 - OFFSET, 0, 1 - OFFSET));
+    // builder.addVertex(new Vector3f(1 - OFFSET, 0, OFFSET));
+    // builder.generateQuad(4, 5, 6, 7, Maths.UP, COLOR);
+    // builder.generateQuad(5, 1, 2, 6, COLOR);
+    // builder.generateQuad(6, 2, 3, 7, COLOR);
+    // builder.generateQuad(7, 3, 0, 4, COLOR);
+    // builder.generateQuad(0, 3, 2, 1, COLOR);
+    // builder.generateQuad(4, 0, 1, 5, COLOR);
+
+    builder.generateQuad(
+        new Vector3f(0, HEIGHT, 0),
+        new Vector3f(0, HEIGHT, 1),
+        new Vector3f(1, HEIGHT, 1),
+        new Vector3f(1, HEIGHT, 0),
+        COLOR);
+    builder.generateQuad(
+        new Vector3f(OFFSET, 0, OFFSET),
+        new Vector3f(OFFSET, 0, 1 - OFFSET),
+        new Vector3f(1 - OFFSET, 0, 1 - OFFSET),
+        new Vector3f(1 - OFFSET, 0, OFFSET),
+        COLOR);
+
+    builder.generateQuad(
+        new Vector3f(OFFSET, 0, 1 - OFFSET),
+        new Vector3f(0, HEIGHT, 1),
+        new Vector3f(1, HEIGHT, 1),
+        new Vector3f(1 - OFFSET, 0, 1 - OFFSET),
+        COLOR);
+    builder.generateQuad(
+        new Vector3f(1 - OFFSET, 0, 1 - OFFSET),
+        new Vector3f(1, HEIGHT, 1),
+        new Vector3f(1, HEIGHT, 0),
+        new Vector3f(1 - OFFSET, 0, OFFSET),
+        COLOR);
+    builder.generateQuad(
+        new Vector3f(1 - OFFSET, 0, OFFSET),
+        new Vector3f(1, HEIGHT, 0),
+        new Vector3f(0, HEIGHT, 0),
+        new Vector3f(OFFSET, 0, OFFSET),
+        COLOR);
+    builder.generateQuad(
+        new Vector3f(OFFSET, 0, OFFSET),
+        new Vector3f(0, HEIGHT, 0),
+        new Vector3f(0, HEIGHT, 1),
+        new Vector3f(OFFSET, 0, 1 - OFFSET),
+        COLOR);
   }
 }

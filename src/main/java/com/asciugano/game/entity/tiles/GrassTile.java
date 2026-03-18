@@ -9,7 +9,7 @@ import org.joml.Vector3f;
 
 public class GrassTile extends TerrainTile {
   private final Color COLOR = generateColor();
-  private static final float HEIGHT = 0.3f;
+  private static final float HEIGHT = 0.15f;
 
   public GrassTile(Tile tile, Loader loader) {
     super(tile, loader);

@@ -2,7 +2,6 @@ package com.asciugano.game.scene;
 
 import com.asciugano.engine.UIManager.UIEntity;
 import com.asciugano.engine.UIManager.UIRenderer;
-import com.asciugano.engine.UIManager.UITexture;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.EntityManager;
@@ -11,7 +10,6 @@ import com.asciugano.engine.handlers.mouse.MousePicker;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.engine.utils.Color;
 import com.asciugano.game.UI.TileSelector;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -37,8 +35,7 @@ public class Scene {
     terrains.add(new Terrain(loader));
     camera = new Camera();
     camera.setTarget(Terrain.getTileFromWorld(0, 0));
-    System.out.println("camera pos: " + camera.getPosition());
-    light = new Light(new Vector3f(0, 100, 100), new Vector3f(1, 1, 1));
+    light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
 
     this.masterRenderer = new MasterRenderer(loader);
     // TODO: fixare in futuro per quando si avranno piu terrains

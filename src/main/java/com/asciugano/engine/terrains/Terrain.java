@@ -43,7 +43,6 @@ public class Terrain {
         }
 
         tiles[x][z] = tile;
-        System.out.println("pos: " + tiles[x][z].getWorldPos());
       }
     }
     MeshBuilder builder = new MeshBuilder();
@@ -73,8 +72,8 @@ public class Terrain {
       case WEST -> x -= 1;
     }
 
-    if(x < 0 || z < 0 || x > SIZE || z > SIZE)
-       return null;
+    if (x < 0 || z < 0 || x > SIZE || z > SIZE)
+      return null;
 
     return tiles[x][z];
   }
