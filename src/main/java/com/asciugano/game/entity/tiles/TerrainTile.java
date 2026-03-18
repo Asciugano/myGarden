@@ -33,9 +33,9 @@ public abstract class TerrainTile extends Tile {
     return model;
   }
 
-  public void fillGaps(Loader loader, Direction direction, MeshBuilder builder, Color color) {
+  public void fillGaps(Loader loader, MeshBuilder builder, Color color) {
     EdgeVertexGenerator.generateEdgeVertices(this, builder);
-    this.model = new ColoredModel(
+    this.edgeModel = new ColoredModel(
         loader.loadToVAO(
             builder.getVertices(),
             builder.getColors(),

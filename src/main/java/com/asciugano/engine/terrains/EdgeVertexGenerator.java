@@ -36,11 +36,6 @@ public class EdgeVertexGenerator {
       MeshBuilder builder) {
     QuadBuilder quadBuilder = new QuadBuilder(builder);
 
-    builder.addVertex(p0, normal, color);
-    builder.addVertex(p1, normal, color);
-    builder.addVertex(p2, normal, color);
-    builder.addVertex(p3, normal, color);
-
-    quadBuilder.generateQuad(0, 1, 2, 3, color);
+    quadBuilder.generateQuad(p0, p1, p2, p3, color);
   }
 }

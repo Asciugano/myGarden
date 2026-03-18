@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.models.QuadBuilder;
 import com.asciugano.engine.renderer.Loader;
+import com.asciugano.engine.terrains.EdgeVertexGenerator;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 
@@ -38,6 +39,8 @@ public class DirtTile extends TerrainTile {
     builder.addVertex(new Vector3f(1, HEIGHT, 0));
 
     builder.generateQuad(0, 1, 2, 3, Maths.UP, COLOR);
+
+    EdgeVertexGenerator.generateEdgeVertices(this, meshBuilder);
   }
 
 }

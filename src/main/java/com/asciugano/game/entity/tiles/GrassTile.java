@@ -3,13 +3,14 @@ package com.asciugano.game.entity.tiles;
 import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.models.QuadBuilder;
 import com.asciugano.engine.renderer.Loader;
+import com.asciugano.engine.terrains.EdgeVertexGenerator;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Vector3f;
 
 public class GrassTile extends TerrainTile {
   private final Color COLOR = generateColor();
-  private static final float HEIGHT = 0.15f;
+  private static final float HEIGHT = 0.05f;
 
   public GrassTile(Tile tile, Loader loader) {
     super(tile, loader);
@@ -42,5 +43,7 @@ public class GrassTile extends TerrainTile {
     builder.addVertex(new Vector3f(1, HEIGHT, 0));
 
     builder.generateQuad(0, 1, 2, 3, Maths.UP, COLOR);
+
+    EdgeVertexGenerator.generateEdgeVertices(this, meshBuilder);
   }
 }

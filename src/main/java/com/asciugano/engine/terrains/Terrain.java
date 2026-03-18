@@ -45,16 +45,6 @@ public class Terrain {
         tiles[x][z] = tile;
       }
     }
-    MeshBuilder builder = new MeshBuilder();
-    fillGaps(builder);
-  }
-
-  private void fillGaps(MeshBuilder builder) {
-    for (TerrainTile[] tileA : tiles) {
-      for (TerrainTile tile : tileA) {
-        EdgeVertexGenerator.generateEdgeVertices(tile, builder);
-      }
-    }
   }
 
   public static Vector3f getPositionFromGrid(int x, int z) {
