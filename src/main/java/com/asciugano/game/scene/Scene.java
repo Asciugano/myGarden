@@ -42,7 +42,7 @@ public class Scene {
   private ChunkManager chunkManager;
 
   public Scene(Loader loader) {
-    // terrains.add(new Terrain(loader));
+    terrains.add(new Terrain(loader));
     camera = new Camera();
     camera.setTarget(Terrain.getTileFromWorld(0, 0));
     light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
