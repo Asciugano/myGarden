@@ -12,7 +12,7 @@ public abstract class TerrainTile extends Tile {
   protected ColoredModel edgeModel;
 
   public TerrainTile(Tile tile, Loader loader) {
-    super(tile.getGridX(), tile.getGridZ());
+    super(tile.getGridX(), tile.getGridZ(), tile.getChunkX(), tile.getChunkZ());
   }
 
   protected void bindModel(Loader loader, Color color) {

@@ -4,6 +4,7 @@ import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.models.QuadBuilder;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.terrains.EdgeVertexGenerator;
+import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Vector3f;
@@ -86,6 +87,6 @@ public class PathTile extends TerrainTile {
         new Vector3f(OFFSET, 0, 1 - OFFSET),
         COLOR);
 
-    EdgeVertexGenerator.generateEdgeVertices(this, meshBuilder);
+    EdgeVertexGenerator.generateEdgeVertices(this, meshBuilder, Terrain.getChunk(chunkX, chunkZ));
   }
 }

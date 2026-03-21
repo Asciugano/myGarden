@@ -1,56 +1,76 @@
 package com.asciugano.engine.terrains;
 
+import com.asciugano.engine.memory.MemoryMapper;
+import com.asciugano.engine.memory.VBOMemoryUpdater;
+import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Direction;
 import com.asciugano.game.entity.tiles.*;
-
-import java.util.Random;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
+import com.asciugano.game.entity.tiles.chunks.ChunkManager;
 
 import org.joml.Vector3f;
 
 public class Terrain {
   private static final int SIZE = 32;
 
+  private static ChunkManager manager;
+  private static VBOMemoryUpdater<Chunk> updater;
+
   public static int getSize() {
     return SIZE;
   }
 
-  private static final TerrainTile[][] tiles = new TerrainTile[SIZE][SIZE];
-
   public Terrain(Loader loader) {
-    generateTerrain(loader);
+    initChunks(loader);
   }
 
   private void loadFromFile() {
     // TODO: implementare dopo al salvataggio
   }
 
-  public void generateTerrain(Loader loader) {
+  private void initChunks(Loader loader) {
+    MeshData mesh = new MeshData(1024 * 1024);
+    MemoryMapper<Chunk> mapper = new MemoryMapper<>();
+    updater = new VBOMemoryUpdater<>(mesh, mapper);
+    manager = new ChunkManager(updater, loader);
+
     for (int x = 0; x < SIZE; x++) {
       for (int z = 0; z < SIZE; z++) {
-        Random random = new Random();
-        int typeN = random.nextInt(4);
-        TerrainTile tile;
-
-        switch (typeN) {
-          case 0 -> tile = new PathTile(new Tile(x, z), loader);
-          case 1 -> tile = new GrassTile(new Tile(x, z), loader);
-          case 2 -> tile = new SoilTile(new Tile(x, z), loader);
-          case 3 -> tile = new DirtTile(new Tile(x, z), loader);
-
-          default -> tile = new GrassTile(new Tile(x, z), loader);
-        }
-
-        tiles[x][z] = tile;
+        manager.loadChunk(x, z);
       }
     }
   }
 
-  public static Vector3f getPositionFromGrid(int x, int z) {
-    return new Vector3f(x * Tile.getTileSize() - (float) SIZE / 2, 0, z * Tile.getTileSize() - (float) SIZE / 2);
+  public TerrainTile getTileFormWorld(Vector3f pos) {
+    float worldX = pos.x + offset();
+    float worldZ = pos.z + offset();
+
+    int tileX = (int) Math.floor(worldX / Tile.getTileSize());
+    int tileZ = (int) Math.floor(worldZ / Tile.getTileSize());
+
+    int chunkX = tileX / Chunk.getSize();
+    int chunkZ = tileZ / Chunk.getSize();
+
+    int localX = tileX % Chunk.getSize();
+    int localZ = tileZ % Chunk.getSize();
+
+    return getChunk(chunkX, chunkZ).getTile(tileX, tileZ);
   }
 
-  public static TerrainTile getTileNeightbour(TerrainTile tile, Direction direction) {
+  public Vector3f getPositionFromGrid(int chunkX, int chunkZ, int tileX, int tileZ) {
+    float worldX = (chunkX * Chunk.getSize() + tileX) * Tile.getTileSize();
+    float worldZ = (chunkZ * Chunk.getSize() + tileZ) * Tile.getTileSize();
+
+    Chunk chunk = getChunk(chunkX, chunkZ);
+
+    return new Vector3f(
+        worldX - offset(),
+        chunk.getTile(tileX, tileZ).getEdgeHeight(),
+        worldZ - offset());
+  }
+
+  public static TerrainTile getTileNeightbour(TerrainTile tile, Direction direction, Chunk chunk) {
     int x = tile.getGridX();
     int z = tile.getGridZ();
 
@@ -61,27 +81,50 @@ public class Terrain {
       case WEST -> x -= 1;
     }
 
-    if (x < 0 || z < 0 || x > SIZE || z > SIZE)
-      return null;
+    if (x >= 0 || x < Chunk.getSize() || z >= 0 || z < Chunk.getSize())
+      return chunk.getTile(x, z);
 
-    return tiles[x][z];
+    int chunkX = chunk.getX();
+    int chunkZ = chunk.getZ();
+
+    if (x < 0) {
+      chunkX--;
+      x = Chunk.getSize() - 1;
+    }
+    if (z < 0) {
+      chunkZ--;
+      z = Chunk.getSize() - 1;
+    }
+    if (x > Chunk.getSize()) {
+      chunkX++;
+      x = 0;
+    }
+    if (z > Chunk.getSize()) {
+      chunkZ++;
+      z = 0;
+    }
+
+    Chunk neighbourChunk = getChunk(chunkX, chunkZ);
+
+    return neighbourChunk.getTile(x, z);
   }
 
-  public static TerrainTile getTileFromWorld(float x, float z) {
-    int gridX = (int) Math.floor((x + offset(x, z)) / Tile.getTileSize());
-    int gridZ = (int) Math.floor((z + offset(x, z)) / Tile.getTileSize());
-
-    if (gridX < 0 || gridZ < 0 || gridX >= SIZE || gridZ >= SIZE)
-      return null;
-
-    return tiles[gridX][gridZ];
+  private float offset() {
+    return (SIZE * Chunk.getSize() * Tile.getTileSize()) / 2f;
   }
 
-  public TerrainTile[][] getTiles() {
-    return tiles;
+  public static Chunk getChunk(int x, int z) {
+    return manager.getChunk(x + "," + z);
   }
 
-  public static float offset(float x, float z) {
-    return (SIZE * Tile.getTileSize()) / 2f;
+  public void update() {
+  }
+
+  public ChunkManager getManager() {
+    return manager;
+  }
+
+  public VBOMemoryUpdater<Chunk> getUpdater() {
+    return updater;
   }
 }

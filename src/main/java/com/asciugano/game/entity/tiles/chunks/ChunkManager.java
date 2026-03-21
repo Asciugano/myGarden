@@ -32,6 +32,14 @@ public class ChunkManager {
       updater.remove(chunk);
   }
 
+  public Map<String, Chunk> getChunks() {
+    return chunks;
+  }
+
+  public Chunk getChunk(String key) {
+    return chunks.get(key);
+  }
+
   private String key(int x, int z) {
     return x + "," + z;
   }

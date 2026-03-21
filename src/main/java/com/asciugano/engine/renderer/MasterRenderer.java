@@ -1,31 +1,34 @@
 package com.asciugano.engine.renderer;
 
-import com.asciugano.engine.display.DisplayManager;
-import com.asciugano.engine.entities.Camera;
-import com.asciugano.engine.entities.Entity;
-import com.asciugano.engine.entities.Light;
-import com.asciugano.engine.entities.MeshComponent;
-import com.asciugano.engine.models.ColoredModel;
-import com.asciugano.engine.models.RawModel;
-import com.asciugano.engine.models.TexturedModel;
-import com.asciugano.engine.shaders.StaticShader;
-import com.asciugano.engine.shaders.TerrainShader;
-import com.asciugano.engine.shaders.TileShader;
-import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.game.entity.tiles.TerrainTile;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import com.asciugano.engine.display.DisplayManager;
+import com.asciugano.engine.entities.Camera;
+import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.entities.Light;
+import com.asciugano.engine.entities.MeshComponent;
+import com.asciugano.engine.models.MeshData;
+import com.asciugano.engine.models.TexturedModel;
+import com.asciugano.engine.shaders.StaticShader;
+import com.asciugano.engine.shaders.TerrainShader;
+import com.asciugano.engine.shaders.TileShader;
+import com.asciugano.engine.terrains.Terrain;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class MasterRenderer {
   private static final float FOV = 70;
@@ -43,9 +46,11 @@ public class MasterRenderer {
   private EntityRenderer entityRenderer;
 
   private TileRenderer tileRenderer;
+  private ChunkRenderer chunkRenderer;
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-  private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
+  // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
+  private List<MeshData> chunks = new ArrayList<>();
   // private SkyBoxRenderer skyBoxRenderer;
 
   public MasterRenderer(Loader loader) {
@@ -76,32 +81,42 @@ public class MasterRenderer {
     tileShader.stop();
   }
 
+  private void renderChunk() {
+    chunkRenderer.render(chunks);
+  }
+
   public void render(Light light, Camera camera) {
     prepare();
 
     renderEntity(light, camera);
-    renderTile(light, camera);
+    // renderTile(light, camera);
+    renderChunk();
 
     // skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
     entities.clear();
-    tiles.clear();
+    // tiles.clear();
+    chunks.clear();
   }
 
   public void processTerrain(Terrain terrain) {
-    for (TerrainTile[] tilesA : terrain.getTiles()) {
-      for (TerrainTile tile : tilesA) {
-        ColoredModel model = tile.getModel();
-        List<TerrainTile> batch = tiles.get(model);
-        if (batch != null) {
-          batch.add(tile);
-        } else {
-          List<TerrainTile> newBatch = new ArrayList<>();
-          newBatch.add(tile);
-          tiles.put(model, newBatch);
-        }
-      }
+    for (Chunk chunk : terrain.getManager().getChunks().values()) {
+      MeshData meshData = chunk.getMeshData();
+      chunks.add(meshData);
     }
+    // for (TerrainTile[] tilesA : terrain.getTiles()) {
+    // for (TerrainTile tile : tilesA) {
+    // ColoredModel model = tile.getModel();
+    // List<TerrainTile> batch = tiles.get(model);
+    // if (batch != null) {
+    // batch.add(tile);
+    // } else {
+    // List<TerrainTile> newBatch = new ArrayList<>();
+    // newBatch.add(tile);
+    // tiles.put(model, newBatch);
+    // }
+    // }
+    // }
   }
 
   public void processEntity(Entity entity) {

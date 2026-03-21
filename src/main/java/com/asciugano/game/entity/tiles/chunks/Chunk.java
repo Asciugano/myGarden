@@ -1,11 +1,12 @@
 package com.asciugano.game.entity.tiles.chunks;
 
+import java.nio.ByteBuffer;
 import java.util.Random;
 
-import com.asciugano.engine.models.ColoredModel;
-import com.asciugano.engine.models.MeshBuilder;
+import org.lwjgl.BufferUtils;
+
+import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.renderer.Loader;
-import com.asciugano.engine.utils.Color;
 import com.asciugano.game.entity.tiles.DirtTile;
 import com.asciugano.game.entity.tiles.GrassTile;
 import com.asciugano.game.entity.tiles.PathTile;
@@ -22,6 +23,7 @@ public class Chunk {
   }
 
   private TerrainTile tiles[][];
+  private MeshData meshData;
 
   private int x, z;
 
@@ -42,17 +44,31 @@ public class Chunk {
         TerrainTile tile;
 
         switch (typeN) {
-          case 0 -> tile = new PathTile(new Tile(x, z), loader);
-          case 1 -> tile = new GrassTile(new Tile(x, z), loader);
-          case 2 -> tile = new SoilTile(new Tile(x, z), loader);
-          case 3 -> tile = new DirtTile(new Tile(x, z), loader);
+          case 0 -> tile = new PathTile(new Tile(x, z, this.x, this.z), loader);
+          case 1 -> tile = new GrassTile(new Tile(x, z, this.x, this.z), loader);
+          case 2 -> tile = new SoilTile(new Tile(x, z, this.x, this.z), loader);
+          case 3 -> tile = new DirtTile(new Tile(x, z, this.x, this.z), loader);
 
-          default -> tile = new GrassTile(new Tile(x, z), loader);
+          default -> tile = new GrassTile(new Tile(x, z, this.x, this.z), loader);
         }
 
         tiles[x][z] = tile;
       }
     }
+
+    byte[] mesh = ChunkMeshBuilder.build(this);
+    meshData = new MeshData(mesh.length);
+
+    meshData.getMeshDataVBO().updateData(0, toBuffer(mesh));
+    meshData.setVertexCount(mesh.length / MeshData.BYTES_PER_VERTEX);
+  }
+
+  private ByteBuffer toBuffer(byte[] data) {
+    ByteBuffer buffer = BufferUtils.createByteBuffer(data.length);
+    buffer.put(data);
+    buffer.flip();
+
+    return buffer;
   }
 
   public TerrainTile getTile(int x, int z) {
@@ -69,5 +85,9 @@ public class Chunk {
 
   public int getZ() {
     return z;
+  }
+
+  public MeshData getMeshData() {
+    return meshData;
   }
 }

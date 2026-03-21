@@ -7,15 +7,16 @@ import com.asciugano.engine.models.QuadBuilder;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Direction;
 import com.asciugano.game.entity.tiles.TerrainTile;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class EdgeVertexGenerator {
-  public static void generateEdgeVertices(TerrainTile tile, MeshBuilder builder) {
-    generateSide(tile, Direction.NORTH, builder);
-    generateSide(tile, Direction.WEST, builder);
+  public static void generateEdgeVertices(TerrainTile tile, MeshBuilder builder, Chunk chunk) {
+    generateSide(tile, Direction.NORTH, builder, chunk);
+    generateSide(tile, Direction.WEST, builder, chunk);
   }
 
-  private static void generateSide(TerrainTile tile, Direction direction, MeshBuilder builder) {
-    TerrainTile other = Terrain.getTileNeightbour(tile, direction);
+  private static void generateSide(TerrainTile tile, Direction direction, MeshBuilder builder, Chunk chunk) {
+    TerrainTile other = Terrain.getTileNeightbour(tile, direction, chunk);
     if (other == null)
       return;
     if (tile.getEdgeHeight() == other.getEdgeHeight())
