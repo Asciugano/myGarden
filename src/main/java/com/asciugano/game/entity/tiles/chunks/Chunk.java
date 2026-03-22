@@ -3,9 +3,12 @@ package com.asciugano.game.entity.tiles.chunks;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
+import org.joml.Vector3f;
+
 import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Loader;
+import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.game.entity.tiles.DirtTile;
 import com.asciugano.game.entity.tiles.GrassTile;
 import com.asciugano.game.entity.tiles.PathTile;
@@ -66,15 +69,16 @@ public class Chunk {
   }
 
   private void genModel(Loader loader, ByteBuffer mesh) {
-
     int floatCount = mesh.capacity() / Float.BYTES;
     float[] vertexData = new float[floatCount];
     mesh.asFloatBuffer().get(vertexData);
 
-    float[] positions = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
-    float[] colors = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
-    float[] normals = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
-    int vertexNum = vertexData.length / (MeshData.BYTES_PER_VERTEX / Float.BYTES);
+    int floatPerVertex = MeshData.BYTES_PER_VERTEX / Float.BYTES;
+    int vertexNum = vertexData.length / floatPerVertex;
+
+    float[] positions = new float[vertexNum * 3];
+    float[] colors = new float[vertexNum * 3];
+    float[] normals = new float[vertexNum * 3];
 
     for (int i = 0; i < vertexNum; i++) {
       int base = i * (MeshData.BYTES_PER_VERTEX / Float.BYTES);
@@ -121,5 +125,13 @@ public class Chunk {
 
   public RawModel getModel() {
     return model;
+  }
+
+  public Vector3f getWorldPos() {
+    float chunkSizeWorld = SIZE * Tile.getTileSize();
+    return new Vector3f(
+        x * chunkSizeWorld - Terrain.offset() + chunkSizeWorld / 2f,
+        0,
+        z * chunkSizeWorld - Terrain.offset() + chunkSizeWorld / 2f);
   }
 }

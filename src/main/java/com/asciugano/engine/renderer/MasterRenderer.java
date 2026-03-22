@@ -24,7 +24,6 @@ import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.entities.MeshComponent;
 import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.models.TexturedModel;
-import com.asciugano.engine.shaders.ChunkShader;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
 import com.asciugano.engine.shaders.TileShader;
@@ -51,7 +50,7 @@ public class MasterRenderer {
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
-  private List<MeshData> chunks = new ArrayList<>();
+  private List<Chunk> chunks = new ArrayList<>();
   // private SkyBoxRenderer skyBoxRenderer;
 
   public MasterRenderer(Loader loader) {
@@ -109,8 +108,7 @@ public class MasterRenderer {
 
   public void processTerrain(Terrain terrain) {
     for (Chunk chunk : terrain.getManager().getChunks().values()) {
-      MeshData meshData = chunk.getMeshData();
-      chunks.add(meshData);
+      chunks.add(chunk);
     }
     // for (TerrainTile[] tilesA : terrain.getTiles()) {
     // for (TerrainTile tile : tilesA) {

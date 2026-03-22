@@ -1,20 +1,21 @@
 package com.asciugano.engine.renderer;
 
-import static org.lwjgl.opengl.GL11.GL_FLAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.List;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-import com.asciugano.engine.models.MeshData;
+import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.shaders.TileShader;
+import com.asciugano.engine.utils.Maths;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class ChunkRenderer {
 
@@ -27,16 +28,41 @@ public class ChunkRenderer {
     this.shader.stop();
   }
 
-  public void render(List<MeshData> meshes) {
-    for (MeshData mesh : meshes) {
-      glBindBuffer(GL_ARRAY_BUFFER, mesh.getMeshDataVBO().getId());
+  public void render(List<Chunk> chunks) {
+    for (Chunk chunk : chunks) {
+      RawModel model = chunk.getModel();
+      prepareModel(model);
+      prepareInstance(chunk);
 
-      glEnableVertexAttribArray(0);
-      glVertexAttribPointer(0, 3, GL_FLAT, false, 3 * Float.BYTES, 0);
+      Vector3f pos = chunk.getWorldPos();
+      System.out.println("chunk x: " + pos.x + " chunk z: " + pos.z);
+      glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
 
-      glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
-
-      glDisableVertexAttribArray(0);
+      unbindModel(model);
     }
+  }
+
+  private void prepareModel(RawModel model) {
+    glBindVertexArray(model.getVaoID());
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+  }
+
+  private void unbindModel(RawModel model) {
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+
+    glBindVertexArray(0);
+  }
+
+  private void prepareInstance(Chunk chunk) {
+    shader.loadTransformationMatrix(
+        Maths.createTransformationMatrix(
+            chunk.getWorldPos(),
+            Maths.ZERO_ROT,
+            1));
   }
 }

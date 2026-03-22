@@ -25,32 +25,53 @@ public class ChunkMeshBuilder {
       }
     }
 
-    return toByteBuffer(vertices);
+    ByteBuffer buffer = BufferUtils.createByteBuffer(vertices.size() * Float.BYTES);
+    for (float f : vertices)
+      buffer.putFloat(f);
+    buffer.flip();
+
+    return buffer;
   }
 
   private static void addTileQuad(List<Float> vertices, TerrainTile tile, Chunk chunk) {
-    Vector3f position = Terrain.getPositionFromGrid(tile.getGridX(), tile.getGridZ(), chunk.getX(), chunk.getZ());
-    position.y = tile.getEdgeHeight();
 
-    vertices.add(position.x);
-    vertices.add(position.y);
-    vertices.add(position.z);
-    vertices.add(position.x + 1);
-    vertices.add(position.y);
-    vertices.add(position.z);
-    vertices.add(position.x + 1);
-    vertices.add(position.y);
-    vertices.add(position.z + 1);
+    Vector3f position = Terrain.getPositionFromGrid(
+        tile.getGridX(), tile.getGridZ(),
+        chunk.getX(), chunk.getZ());
 
-    vertices.add(position.x);
-    vertices.add(position.y);
-    vertices.add(position.z);
-    vertices.add(position.x + 1);
-    vertices.add(position.y);
-    vertices.add(position.z + 1);
-    vertices.add(position.x);
-    vertices.add(position.y);
-    vertices.add(position.z + 1);
+    float y = tile.getEdgeHeight();
+
+    float r = tile.getEdgeColor().color.x;
+    float g = tile.getEdgeColor().color.y;
+    float b = tile.getEdgeColor().color.z;
+
+    float nx = 0;
+    float ny = 1;
+    float nz = 0;
+
+    addVertex(vertices, position.x, y, position.z, r, g, b, nx, ny, nz);
+    addVertex(vertices, position.x + 1, y, position.z, r, g, b, nx, ny, nz);
+    addVertex(vertices, position.x + 1, y, position.z + 1, r, g, b, nx, ny, nz);
+
+    addVertex(vertices, position.x, y, position.z, r, g, b, nx, ny, nz);
+    addVertex(vertices, position.x + 1, y, position.z + 1, r, g, b, nx, ny, nz);
+    addVertex(vertices, position.x, y, position.z + 1, r, g, b, nx, ny, nz);
+  }
+
+  private static void addVertex(List<Float> v,
+      float x, float y, float z,
+      float r, float g, float b,
+      float nx, float ny, float nz) {
+
+    v.add(x);
+    v.add(y);
+    v.add(z);
+    v.add(r);
+    v.add(g);
+    v.add(b);
+    v.add(nx);
+    v.add(ny);
+    v.add(nz);
   }
 
   private static ByteBuffer toByteBuffer(List<Float> data) {

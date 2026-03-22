@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class MeshData {
 
-  public static final int BYTES_PER_VERTEX = 32; // INFO: si puo' cambiare
+  public static final int BYTES_PER_VERTEX = 36; // INFO: si puo' cambiare
 
   private final MeshDataVBO meshDataVBO;
   private int vertexCount;

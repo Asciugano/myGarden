@@ -52,8 +52,11 @@ public class VBOMemoryUpdater<T> {
   }
 
   private ByteBuffer storeDataInBuffer(ByteBuffer data) {
+    if (buffer.capacity() < data.capacity())
+      buffer = BufferUtils.createByteBuffer(data.capacity());
+
     buffer.clear();
-    buffer = data;
+    buffer.put(data);
     buffer.flip();
     return buffer;
   }
