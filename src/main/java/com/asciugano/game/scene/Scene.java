@@ -15,7 +15,6 @@ import com.asciugano.engine.handlers.mouse.MousePicker;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.engine.utils.Maths;
 import com.asciugano.game.UI.TileSelector;
 import com.asciugano.game.entity.tiles.chunks.Chunk;
 
@@ -36,7 +35,7 @@ public class Scene {
   public Scene(Loader loader) {
     camera = new Camera();
     terrain = new Terrain(loader);
-    camera.setTarget(terrain.getTileFormWorld(Maths.ZERO_ROT));
+    camera.setTarget(Terrain.getChunk(16, 16).getTile(0, 0));
     light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
 
     this.masterRenderer = new MasterRenderer(loader);

@@ -12,6 +12,8 @@ import org.joml.Matrix4f;
 
 import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.shaders.TileShader;
+import com.asciugano.engine.utils.Maths;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class ChunkRenderer {
 
@@ -24,12 +26,12 @@ public class ChunkRenderer {
     this.shader.stop();
   }
 
-  public void render(List<MeshData> meshes) {
-    for (MeshData mesh : meshes) {
-      prepareModel(mesh);
-      // prepareInstance(mesh);
+  public void render(List<Chunk> chunks) {
+    for (Chunk chunk : chunks) {
+      prepareModel(chunk.getMeshData());
+      prepareInstance(chunk);
 
-      glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+      glDrawArrays(GL_TRIANGLES, 0, chunk.getMeshData().getVertexCount());
 
       unbindModel();
     }
@@ -49,5 +51,13 @@ public class ChunkRenderer {
     glDisableVertexAttribArray(2);
 
     glBindVertexArray(0);
+  }
+
+  private void prepareInstance(Chunk chunk) {
+    shader.loadTransformationMatrix(
+        Maths.createTransformationMatrix(
+            chunk.getWorldPos(),
+            Maths.ZERO_ROT,
+            1));
   }
 }

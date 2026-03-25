@@ -22,7 +22,6 @@ import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.entities.MeshComponent;
-import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
@@ -50,7 +49,7 @@ public class MasterRenderer {
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
-  private List<MeshData> terrainMeshDatas = new ArrayList<>();
+  private List<Chunk> chunks = new ArrayList();
   // private SkyBoxRenderer skyBoxRenderer;
 
   public MasterRenderer(Loader loader) {
@@ -87,7 +86,7 @@ public class MasterRenderer {
     tileShader.loadViewMatrix(camera);
     tileShader.loadLight(light);
 
-    chunkRenderer.render(terrainMeshDatas);
+    chunkRenderer.render(chunks);
 
     tileShader.stop();
   }
@@ -102,14 +101,18 @@ public class MasterRenderer {
     // skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
     entities.clear();
-    terrainMeshDatas.clear();
+    chunks.clear();
     // tiles.clear();
   }
 
+  public void processChunk(Chunk chunk) {
+    chunks.add(chunk);
+  }
+
   public void processTerrain(Terrain terrain) {
-    terrainMeshDatas.clear();
     for (Chunk chunk : terrain.getManager().getChunks().values()) {
-      terrainMeshDatas.add(chunk.getMeshData());
+      chunks.add(chunk);
+      // terrainMeshDatas.add(chunk.getMeshData());
     }
     // for (TerrainTile[] tilesA : terrain.getTiles()) {
     // for (TerrainTile tile : tilesA) {
