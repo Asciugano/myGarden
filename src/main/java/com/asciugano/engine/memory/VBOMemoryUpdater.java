@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 
 import com.asciugano.engine.models.MeshData;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class VBOMemoryUpdater<T> {
   private static final float RESIZE_FACTOR = 1.2f;
@@ -22,6 +23,10 @@ public class VBOMemoryUpdater<T> {
     MemorySlot slot = memoryMapper.store(objectKey, vertexData);
     storeDataInVBO(slot, vertexData);
     updateMeshVertexCount();
+
+    if (objectKey instanceof Chunk chunk) {
+      chunk.setRenderOffset(slot.getStartIndex(), slot.getLenght());
+    }
   }
 
   public void remove(T objectKey) {

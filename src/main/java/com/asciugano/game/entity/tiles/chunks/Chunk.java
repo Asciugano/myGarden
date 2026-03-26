@@ -30,10 +30,26 @@ public class Chunk {
   private int x, z;
   private final String key;
 
+  private int vertexOffset;
+  private int vertexCount;
+
   public Chunk(int x, int z) {
     this.x = x;
     this.z = z;
     this.key = x + "," + z;
+  }
+
+  public void setRenderOffset(int vertexOffset, int vertexCount) {
+    this.vertexOffset = vertexOffset;
+    this.vertexCount = vertexCount;
+  }
+
+  public int getVertexCount() {
+    return this.vertexCount;
+  }
+
+  public int getVertexOffset() {
+    return this.vertexOffset;
   }
 
   public void loadTiles() {

@@ -27,14 +27,20 @@ public class ChunkRenderer {
   }
 
   public void render(List<Chunk> chunks) {
+    if (chunks.isEmpty())
+      return;
+    prepareModel(chunks.getFirst().getMeshData());
+
     for (Chunk chunk : chunks) {
-      prepareModel(chunk.getMeshData());
       prepareInstance(chunk);
 
-      glDrawArrays(GL_TRIANGLES, 0, chunk.getMeshData().getVertexCount());
+      glDrawArrays(
+          GL_TRIANGLES,
+          chunk.getVertexOffset(),
+          chunk.getVertexCount());
 
-      unbindModel();
     }
+    unbindModel();
   }
 
   private void prepareModel(MeshData mesh) {

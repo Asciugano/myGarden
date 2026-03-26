@@ -110,23 +110,8 @@ public class MasterRenderer {
   }
 
   public void processTerrain(Terrain terrain) {
-    for (Chunk chunk : terrain.getManager().getChunks().values()) {
-      chunks.add(chunk);
-      // terrainMeshDatas.add(chunk.getMeshData());
-    }
-    // for (TerrainTile[] tilesA : terrain.getTiles()) {
-    // for (TerrainTile tile : tilesA) {
-    // ColoredModel model = tile.getModel();
-    // List<TerrainTile> batch = tiles.get(model);
-    // if (batch != null) {
-    // batch.add(tile);
-    // } else {
-    // List<TerrainTile> newBatch = new ArrayList<>();
-    // newBatch.add(tile);
-    // tiles.put(model, newBatch);
-    // }
-    // }
-    // }
+    chunks.clear();
+    chunks.addAll(terrain.getManager().getChunks().values());
   }
 
   public void processEntity(Entity entity) {
